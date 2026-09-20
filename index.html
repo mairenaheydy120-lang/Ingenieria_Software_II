@@ -1,0 +1,1704 @@
+<!DOCTYPE html>
+<html lang="es" data-tema="claro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Mapa mental interactivo del Encuentro 1 del componente Ingeniería del Software II (CISO012), UNAN-Managua.">
+<title>Mapa mental — Ingeniería del Software II (CISO012) · Encuentro 1</title>
+<style>
+*,*::before,*::after{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;height:100vh;height:100dvh;overflow:hidden;
+  display:flex;flex-direction:column;
+  font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+  background:var(--fondo);color:var(--texto);
+  -webkit-text-size-adjust:100%;
+}
+:root{
+  --fondo:#eef1f5;--panel:#ffffff;--texto:#16202c;--texto2:#4c5b6b;
+  --borde:#cdd6e0;--nodo-fondo:#ffffff;--nodo-borde:#c4d0dd;--enlace:#b7c3d1;
+  --acento-ui:#1f4e79;--sombra:0 2px 12px rgba(16,32,48,.14);
+  --c-raiz:#123a5e;--c-temas:#2a6f5e;--c-planificacion:#6b4a8f;
+  --c-herramientas:#946118;--c-riesgos:#a23b3b;--c-uml:#1a6c86;--c-caso:#b0552a;
+  --c-complemento:#6e6e80;
+  --altura-header:0px;
+}
+html[data-tema="oscuro"]{
+  --fondo:#0f151c;--panel:#161e27;--texto:#e7eef6;--texto2:#a3b2c2;
+  --borde:#2c3947;--nodo-fondo:#1a232e;--nodo-borde:#38465a;--enlace:#3d4d5e;
+  --acento-ui:#7fb2e0;--sombra:0 2px 14px rgba(0,0,0,.55);
+  --c-raiz:#8fb8e0;--c-temas:#66c2a5;--c-planificacion:#b39ddb;
+  --c-herramientas:#e0b15c;--c-riesgos:#e88b8b;--c-uml:#6fc5de;--c-caso:#e29b6b;
+  --c-complemento:#a0a0b8;
+}
+.tag-raiz{--c:var(--c-raiz)}
+.tag-temas{--c:var(--c-temas)}
+.tag-planificacion{--c:var(--c-planificacion)}
+.tag-herramientas{--c:var(--c-herramientas)}
+.tag-riesgos{--c:var(--c-riesgos)}
+.tag-uml{--c:var(--c-uml)}
+.tag-caso{--c:var(--c-caso)}
+.tag-complemento{--c:var(--c-complemento)}
+
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+
+.cabecera{
+  flex:0 0 auto;background:var(--panel);border-bottom:1px solid var(--borde);
+  padding:8px 10px 6px;display:flex;flex-direction:column;gap:6px;z-index:30;
+  position:relative;
+}
+.fila-superior{display:flex;align-items:center;gap:8px}
+.marca{display:flex;align-items:center;gap:8px;min-width:0;flex:1 1 auto}
+.logo{
+  flex:0 0 auto;width:32px;height:32px;border-radius:8px;
+  background:var(--acento-ui);color:#fff;display:flex;align-items:center;justify-content:center;
+  font-size:17px;font-weight:700;
+}
+html[data-tema="oscuro"] .logo{color:#0f151c}
+.marca h1{font-size:15px;line-height:1.15;margin:0;font-weight:700}
+.marca p{margin:2px 0 0;font-size:11px;color:var(--texto2);line-height:1.2}
+.btn-icono{
+  flex:0 0 auto;width:44px;height:44px;border-radius:10px;border:1px solid var(--borde);
+  background:transparent;color:var(--texto);font-size:18px;cursor:pointer;line-height:1;
+}
+.btn-icono:hover{background:var(--fondo)}
+
+.busqueda{display:flex;align-items:center;gap:8px}
+#buscador{
+  flex:1 1 auto;min-width:0;height:44px;border-radius:10px;border:1px solid var(--borde);
+  background:var(--fondo);color:var(--texto);padding:0 12px;font-size:14px;font-family:inherit;
+}
+#buscador:focus-visible{outline:2px solid var(--acento-ui);outline-offset:1px}
+#resultado-busqueda{flex:0 0 auto;font-size:11.5px;color:var(--texto2);min-width:58px;text-align:right}
+
+.botones{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;scrollbar-width:thin}
+.botones button{
+  flex:0 0 auto;min-height:44px;padding:0 12px;border-radius:10px;
+  border:1px solid var(--borde);background:var(--fondo);color:var(--texto);
+  font-size:12.5px;font-family:inherit;cursor:pointer;white-space:nowrap;
+}
+.botones button:hover{border-color:var(--acento-ui)}
+.botones button:focus-visible{outline:2px solid var(--acento-ui);outline-offset:1px}
+
+.migas{display:flex;flex-wrap:wrap;align-items:center;gap:4px;font-size:11.5px;color:var(--texto2);min-height:0}
+.migas[hidden]{display:none}
+.migas button{
+  border:none;background:transparent;color:var(--texto2);font:inherit;cursor:pointer;
+  padding:4px 3px;border-radius:6px;max-width:46vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.migas button:hover{color:var(--texto);text-decoration:underline}
+.migas .sep{opacity:.55}
+.migas .actual{color:var(--texto);font-weight:600}
+
+.progreso{display:flex;align-items:center;gap:8px;font-size:10.5px;color:var(--texto2)}
+.barra{flex:1 1 auto;height:5px;border-radius:99px;background:var(--borde);overflow:hidden}
+#progreso-barra{height:100%;width:0;background:var(--acento-ui);transition:width .3s ease}
+
+.zona-mapa{flex:1 1 auto;position:relative;overflow:hidden;background:var(--fondo)}
+#mapa{display:block;width:100%;height:100%;touch-action:none;cursor:grab}
+#mapa.arrastrando{cursor:grabbing}
+#mapa:focus{outline:none}
+
+.enlace{stroke:var(--c);stroke-width:1.8;opacity:.5;fill:none;transition:opacity .2s}
+.enlace.atenuado{opacity:.12}
+
+.nodo{cursor:pointer;outline:none}
+.nodo .caja{fill:var(--nodo-fondo);stroke:var(--nodo-borde);stroke-width:1.4;transition:stroke .15s, fill .15s}
+.nodo .acento{stroke:var(--c);stroke-width:5;stroke-linecap:round}
+.nodo .etiqueta{fill:var(--texto);font-family:"Segoe UI",system-ui,-apple-system,Arial,sans-serif;pointer-events:none}
+.nodo .marca{fill:var(--texto2);font-size:11px;font-weight:700;pointer-events:none}
+.nodo:hover .caja{stroke:var(--c);stroke-width:2}
+.nodo:focus-visible .caja{stroke:var(--acento-ui);stroke-width:3}
+.nodo.activo .caja{stroke:var(--c);stroke-width:2.6}
+.nodo.coincidencia .caja{stroke:#d99b00;stroke-width:3}
+html[data-tema="oscuro"] .nodo.coincidencia .caja{stroke:#ffcc4d}
+.nodo.atenuado{opacity:.25}
+.nodo.atenuado .caja{stroke-dasharray:3 3}
+
+/* ---------- PANEL LATERAL ----------
+   En móvil: tarjeta inferior.
+   En escritorio: panel fijo a la derecha, alineado con el área del mapa,
+   es decir, empezando justo debajo de la cabecera (--altura-header). */
+#panel{
+  position:fixed;left:0;right:0;bottom:0;max-height:62vh;overflow-y:auto;z-index:25;
+  background:var(--panel);border-top:1px solid var(--borde);
+  box-shadow:var(--sombra);padding:12px 14px 20px;
+  transform:translateY(105%);transition:transform .28s cubic-bezier(.22,.61,.36,1);
+  -webkit-overflow-scrolling:touch;
+}
+#panel.abierto{transform:translateY(0)}
+.panel-cab{display:flex;align-items:flex-start;gap:8px;justify-content:space-between}
+.chip{
+  display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;
+  padding:4px 9px;border-radius:99px;color:#fff;background:var(--c,var(--acento-ui));
+}
+html[data-tema="oscuro"] .chip{color:#0f151c}
+#panel-cerrar{
+  width:44px;height:44px;flex:0 0 auto;border-radius:10px;border:1px solid var(--borde);
+  background:transparent;color:var(--texto);font-size:16px;cursor:pointer;
+}
+#panel-cerrar:hover{background:var(--fondo)}
+#panel-titulo{font-size:17px;line-height:1.25;margin:10px 0 4px}
+.fuente{font-size:11px;color:var(--texto2);margin:0 0 10px;font-style:italic}
+#panel-cuerpo p{font-size:14px;line-height:1.55;margin:0 0 10px}
+#panel-nota{
+  margin-top:12px;padding:9px 11px;border-left:3px solid var(--c,var(--acento-ui));
+  background:var(--fondo);border-radius:0 8px 8px 0;font-size:12.5px;line-height:1.45;
+}
+#panel-hijos{margin-top:14px}
+#panel-hijos h3{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--texto2);margin:0 0 7px}
+.enlace-hijo{
+  display:block;width:100%;text-align:left;min-height:44px;padding:9px 12px;margin-bottom:6px;
+  border:1px solid var(--borde);border-left:4px solid var(--c,var(--acento-ui));
+  border-radius:9px;background:transparent;color:var(--texto);font:inherit;font-size:13px;
+  cursor:pointer;line-height:1.3;
+}
+.enlace-hijo:hover{background:var(--fondo);transform:translateX(2px)}
+.enlace-hijo{transition:background .15s, transform .15s}
+
+/* Minimapa */
+.minimapa{
+  position:absolute;right:10px;bottom:10px;width:160px;height:120px;
+  background:var(--panel);border:1px solid var(--borde);border-radius:10px;
+  box-shadow:var(--sombra);overflow:hidden;z-index:5;cursor:pointer;opacity:.9;
+}
+.minimapa:hover{opacity:1}
+#minimapa-svg{display:block;width:100%;height:100%}
+#mini-viewport{fill:var(--acento-ui);fill-opacity:.16;stroke:var(--acento-ui);stroke-width:1.5}
+.mm-nodo{fill:var(--nodo-borde)}
+.mm-nodo.tag-raiz{fill:var(--c-raiz)}
+.mm-nodo.tag-temas{fill:var(--c-temas)}
+.mm-nodo.tag-planificacion{fill:var(--c-planificacion)}
+.mm-nodo.tag-herramientas{fill:var(--c-herramientas)}
+.mm-nodo.tag-riesgos{fill:var(--c-riesgos)}
+.mm-nodo.tag-uml{fill:var(--c-uml)}
+.mm-nodo.tag-caso{fill:var(--c-caso)}
+.mm-nodo.tag-complemento{fill:var(--c-complemento)}
+
+/* FAB de navegación rápida */
+.fab{
+  position:absolute;left:10px;bottom:10px;width:48px;height:48px;border-radius:50%;
+  border:1px solid var(--borde);background:var(--panel);color:var(--texto);
+  font-size:20px;cursor:pointer;box-shadow:var(--sombra);z-index:6;
+  display:flex;align-items:center;justify-content:center;line-height:1;
+}
+.fab:hover{background:var(--fondo)}
+
+/* Panel de navegación rápida */
+#quicknav{
+  position:fixed;top:0;left:0;bottom:0;width:280px;max-width:82vw;
+  background:var(--panel);border-right:1px solid var(--borde);
+  z-index:40;padding:16px;overflow-y:auto;
+  transform:translateX(-105%);transition:transform .26s cubic-bezier(.22,.61,.36,1);
+  box-shadow:var(--sombra);
+}
+#quicknav.abierto{transform:translateX(0)}
+#quicknav h2{font-size:13px;text-transform:uppercase;letter-spacing:.6px;color:var(--texto2);margin:0 0 12px}
+#quicknav .cerrar{
+  position:absolute;top:10px;right:10px;width:38px;height:38px;border-radius:10px;
+  border:1px solid var(--borde);background:transparent;color:var(--texto);font-size:16px;cursor:pointer;
+}
+#quicknav ul{list-style:none;padding:0;margin:0}
+#quicknav li{margin-bottom:6px}
+#quicknav button.rama{
+  display:block;width:100%;text-align:left;min-height:44px;padding:10px 12px;
+  border:1px solid var(--borde);border-left:5px solid var(--c,var(--acento-ui));
+  border-radius:9px;background:transparent;color:var(--texto);font:inherit;
+  font-size:13px;font-weight:600;cursor:pointer;line-height:1.25;
+}
+#quicknav button.rama:hover{background:var(--fondo);transform:translateX(3px);transition:transform .15s}
+#quicknav button.rama .sub{display:block;font-weight:400;font-size:11.5px;color:var(--texto2);margin-top:3px}
+
+#tooltip{
+  position:fixed;pointer-events:none;z-index:50;background:var(--panel);
+  border:1px solid var(--borde);border-radius:8px;padding:8px 11px;font-size:12.5px;
+  color:var(--texto);box-shadow:var(--sombra);max-width:280px;line-height:1.4;
+  opacity:0;transition:opacity .15s;
+}
+#tooltip.visible{opacity:1}
+#tooltip .tt-titulo{font-weight:700;margin-bottom:3px}
+#tooltip .tt-sub{color:var(--texto2);font-size:11.5px}
+
+@media (min-width:860px){
+  /* El panel arranca justo debajo de la cabecera para no quedar tapado por ella */
+  #panel{
+    left:auto;top:var(--altura-header, 0px);bottom:0;width:420px;max-height:none;
+    border-top:none;border-left:1px solid var(--borde);
+    transform:translateX(105%);padding:18px 20px 28px;
+  }
+  #panel.abierto{transform:translateX(0)}
+  .marca h1{font-size:16px}
+  #panel-titulo{font-size:19px}
+
+  /* Cuando el panel está abierto en escritorio, el minimapa queda tapado:
+     lo ocultamos para que no haya controles inaccesibles bajo el panel. */
+  body.panel-abierto .minimapa{opacity:0;pointer-events:none}
+}
+
+@media (max-width:520px){
+  .minimapa{width:120px;height:90px}
+}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{transition-duration:.01ms !important;animation-duration:.01ms !important}
+}
+</style>
+</head>
+<body>
+
+<header class="cabecera">
+  <div class="fila-superior">
+    <div class="marca">
+      <span class="logo" aria-hidden="true">IS</span>
+      <div>
+        <h1>Ingeniería del Software II</h1>
+        <p>Mapa mental del Encuentro 1 · CISO012 · UNAN-Managua</p>
+      </div>
+    </div>
+    <button id="btn-tema" class="btn-icono" type="button" aria-label="Cambiar tema">◐</button>
+  </div>
+
+  <div class="busqueda">
+    <label class="sr-only" for="buscador">Buscar un tema dentro del mapa</label>
+    <input id="buscador" type="search" autocomplete="off" placeholder="Buscar: riesgo, UML, charter, SQA…">
+    <span id="resultado-busqueda" aria-live="polite"></span>
+  </div>
+
+  <div class="botones" role="group" aria-label="Controles del mapa">
+    <button type="button" data-accion="expandir">Expandir todo</button>
+    <button type="button" data-accion="contraer">Contraer todo</button>
+    <button type="button" data-accion="centrar">Centrar</button>
+    <button type="button" data-accion="zoom-mas" aria-label="Acercar">Zoom +</button>
+    <button type="button" data-accion="zoom-menos" aria-label="Alejar">Zoom −</button>
+    <button type="button" data-accion="restablecer">Restablecer</button>
+  </div>
+
+  <nav id="migas" class="migas" aria-label="Ruta del nodo activo" hidden></nav>
+
+  <div class="progreso">
+    <div class="barra" role="progressbar" aria-label="Avance de lectura" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progreso-barra-caja">
+      <div id="progreso-barra"></div>
+    </div>
+    <span id="progreso-texto">0 nodos visitados</span>
+  </div>
+</header>
+
+<main class="zona-mapa">
+  <svg id="mapa" role="tree" aria-label="Mapa mental del componente Ingeniería del Software II"></svg>
+
+  <div class="minimapa" id="minimapa" role="presentation" aria-hidden="true">
+    <svg id="minimapa-svg" viewBox="0 0 160 120" preserveAspectRatio="xMidYMid meet">
+      <g id="mm-nodos"></g>
+      <rect id="mini-viewport" x="0" y="0" width="0" height="0" rx="2"></rect>
+    </svg>
+  </div>
+
+  <button id="btn-quicknav" class="fab" type="button" aria-label="Abrir navegación rápida" aria-expanded="false">☰</button>
+
+  <div id="tooltip" role="tooltip" hidden>
+    <div class="tt-titulo"></div>
+    <div class="tt-sub"></div>
+  </div>
+</main>
+
+<aside id="quicknav" aria-label="Navegación rápida por ramas" aria-hidden="true">
+  <button class="cerrar" id="quicknav-cerrar" type="button" aria-label="Cerrar navegación rápida">✕</button>
+  <h2>Ramas principales</h2>
+  <ul id="quicknav-lista"></ul>
+</aside>
+
+<aside id="panel" aria-label="Detalle del nodo seleccionado">
+  <div class="panel-cab">
+    <span id="panel-tag" class="chip">Núcleo</span>
+    <button id="panel-cerrar" type="button" aria-label="Cerrar panel de detalle">✕</button>
+  </div>
+  <h2 id="panel-titulo"></h2>
+  <p id="panel-fuente" class="fuente"></p>
+  <div id="panel-cuerpo"></div>
+  <div id="panel-nota" hidden></div>
+  <div id="panel-hijos"></div>
+</aside>
+
+<script>
+(function () {
+  "use strict";
+
+  /* =========================================================================
+     CÓMO ACTUALIZAR ESTE MAPA (guía para el/la docente del próximo semestre)
+     -------------------------------------------------------------------------
+     1. TODO el contenido vive en el objeto MINDMAP que está justo debajo.
+        La lógica de dibujo NO necesita tocarse.
+     2. Cada nodo tiene esta forma:
+          {
+            id:      "identificador-unico",   // obligatorio, sin repetir
+            label:   "Texto que se ve en el mapa",
+            tag:     "temas",                 // color de rama
+            source:  "Programa del componente",
+            nota:    "Opcional: aclaraciones o discrepancias",
+            summary: "Texto del panel. Separa con \\n\\n para varios párrafos.",
+            children:[ ...otros nodos... ]
+          }
+     3. AGREGAR: copia un bloque y pégalo dentro de children del padre.
+     4. EDITAR: cambia solo label y summary.
+     5. REORDENAR: mueve el bloque dentro del arreglo children.
+     6. BORRAR: elimina el bloque completo (incluidos sus children).
+     7. Etiquetas de color (tag): temas · planificacion · herramientas ·
+        riesgos · uml · caso · complemento
+     8. En los nodos hoja, redacta el summary respondiendo:
+        ¿qué es? / ¿para qué sirve? / ¿cómo lo aplico en mi proyecto?
+     ========================================================================= */
+
+  const MINDMAP = {
+    id: "raiz",
+    tag: "raiz",
+    label: "Ingeniería del Software II — Planificación y Modelado UML",
+    source: "Programa CISO012 + Material Encuentro 1",
+    summary: "¿Qué es? La vista del Encuentro 1 del componente Ingeniería del Software II (CISO012), centrada en seis bloques: los cuatro temas del componente, la justificación de la planificación, las herramientas básicas, la gestión de riesgos, el modelado UML con énfasis en la vista dinámica y el caso EquipoSoft / CaféApp.\n\n¿Para qué sirve? Para estudiar de forma autónoma antes, durante y después del encuentro, incluso desde el teléfono y sin conexión a Internet.\n\n¿Cómo lo aplico? Recorre las seis ramas, abre los nodos que necesites y usa el buscador para repasar antes del examen. Cada nodo hoja te dice qué es, para qué sirve y cómo llevarlo a tu propio proyecto.",
+    children: [
+
+      /* ============ 1. LOS CUATRO TEMAS DEL COMPONENTE ============ */
+      {
+        id: "temas",
+        tag: "temas",
+        label: "1. Los cuatro temas del componente",
+        source: "Programa del componente",
+        summary: "¿Qué es? El panorama general del componente: cuatro temas que se recorren a lo largo del semestre.\n\n¿Para qué sirve? Da el mapa completo del curso: saber dónde estás hoy y qué viene después.\n\n¿Cómo lo aplico? Al planificar tu proyecto integrador, verifica qué tema aporta cada artefacto que vas produciendo.",
+        children: [
+          {
+            id: "tema-1",
+            tag: "temas",
+            label: "Tema I — Planificación y gestión de proyectos de software",
+            source: "Programa del componente",
+            summary: "¿Qué es? El tema que abre el componente: cómo se planifica y se gestiona un proyecto de software.\n\n¿Para qué sirve? Es la base de todo lo demás: sin planificación no hay control del alcance, del tiempo ni de los riesgos.\n\n¿Cómo lo aplico? Es el tema del Encuentro 1; se desarrolla con las herramientas de planificación y la gestión básica de riesgos."
+          },
+          {
+            id: "tema-2",
+            tag: "temas",
+            label: "Tema II — Comportamiento del software con UML (vista dinámica)",
+            source: "Programa del componente",
+            summary: "¿Qué es? El modelado del comportamiento del software mediante UML, con énfasis en los diagramas de vista dinámica.\n\n¿Para qué sirve? Permite describir cómo cambia el sistema a lo largo del tiempo y cómo reacciona ante eventos.\n\n¿Cómo lo aplico? Se concreta en el diagrama de máquina de estados del Encuentro 1, aplicado al ciclo de vida de una tarea."
+          },
+          {
+            id: "tema-3",
+            tag: "temas",
+            label: "Tema III — Metodologías ágiles y de Ingeniería Web",
+            source: "Programa del componente",
+            summary: "¿Qué es? El estudio de metodologías ágiles y de Ingeniería Web para organizar el trabajo de desarrollo.\n\n¿Para qué sirve? Ofrece marcos de trabajo alternativos al enfoque tradicional, útiles en equipos pequeños.\n\n¿Cómo lo aplico? Se aborda más adelante en el semestre; llega con la planificación del Tema I ya resuelta."
+          },
+          {
+            id: "tema-4",
+            tag: "temas",
+            label: "Tema IV — Arquitecturas esenciales de software",
+            source: "Programa del componente",
+            summary: "¿Qué es? El estudio de las arquitecturas esenciales de software.\n\n¿Para qué sirve? Permite tomar decisiones estructurales sobre cómo se organiza un sistema antes de construirlo.\n\n¿Cómo lo aplico? Se aborda en la parte final del componente; documenta entonces las decisiones arquitectónicas de tu proyecto."
+          }
+        ]
+      },
+
+      /* ============ 2. ¿POR QUÉ PLANIFICAR? ============ */
+      {
+        id: "planificacion",
+        tag: "planificacion",
+        label: "2. ¿Por qué planificar un proyecto de software?",
+        source: "Material Encuentro 1",
+        summary: "¿Qué es? El argumento pedagógico que justifica dedicar tiempo a planificar antes de programar.\n\n¿Para qué sirve? Rompe la idea de que planificar retrasa; planificar anticipa los problemas en lugar de postergarlos.\n\n¿Cómo lo aplico? Antes de escribir código en tu proyecto, dedica una sesión a producir minuta, charter, roles, comunicación y riesgos.",
+        children: [
+          {
+            id: "plan-ciclo",
+            tag: "planificacion",
+            label: "La planificación como primera etapa del ciclo de vida",
+            source: "Material Encuentro 1",
+            summary: "¿Qué es? La planificación es la primera etapa del ciclo de vida del software.\n\n¿Para qué sirve? Fija el punto de partida: sin ella, las etapas siguientes se construyen sobre supuestos no verificados.\n\n¿Cómo lo aplico? Trata la planificación como entregable del proyecto, no como una charla informal previa."
+          },
+          {
+            id: "plan-posterga",
+            tag: "planificacion",
+            label: "Un proyecto sin planificación no es más rápido: posterga sus problemas",
+            source: "Material Encuentro 1",
+            summary: "¿Qué es? La idea central del Encuentro 1: saltarse la planificación no acelera el proyecto, solo traslada los problemas más adelante, cuando son más caros de resolver.\n\n¿Para qué sirve? Cambia el criterio con el que decides si vale la pena planificar.\n\n¿Cómo lo aplico? Cuando sientas la tentación de \"seguir programando y luego vemos\", revisa la tabla comparativa del caso EquipoSoft / CaféApp."
+          },
+          {
+            id: "plan-equipos",
+            tag: "planificacion",
+            label: "Adaptación a equipos pequeños y proyectos académicos",
+            source: "Material Encuentro 1",
+            summary: "¿Qué es? La planificación que se enseña está adaptada a equipos pequeños y a proyectos académicos.\n\n¿Para qué sirve? Evita que apliques formatos pensados para grandes empresas, imposibles de sostener en un semestre.\n\n¿Cómo lo aplico? Usa versiones simplificadas: minuta breve, charter de una página y un RACI con cuatro roles."
+          },
+          {
+            id: "plan-autores",
+            tag: "planificacion",
+            label: "Aportes de Pressman, Sommerville y Kendall & Kendall",
+            source: "Material Encuentro 1",
+            summary: "¿Qué es? El material del encuentro se apoya en los aportes de Pressman (2010), Sommerville (2011) y Kendall & Kendall (2011) sobre planificación y análisis.\n\n¿Para qué sirve? Da respaldo académico a las herramientas que usarás y te orienta para ampliar el tema.\n\n¿Cómo lo aplico? Consulta estas referencias cuando necesites profundizar."
+          }
+        ]
+      },
+
+      /* ============ 3. HERRAMIENTAS ============ */
+      {
+        id: "herramientas",
+        tag: "herramientas",
+        label: "3. Herramientas básicas de planificación",
+        source: "Material Encuentro 1",
+        summary: "¿Qué es? El conjunto de artefactos concretos que producen los equipos para planificar y dar seguimiento al proyecto.\n\n¿Para qué sirve? Convierten la intención de planificar en documentos revisables y verificables.\n\n¿Cómo lo aplico? Elabora las cuatro herramientas para tu propio proyecto y actualízalas en cada reunión de equipo.",
+        children: [
+          {
+            id: "herr-minuta",
+            tag: "herramientas",
+            label: "Minuta de reunión",
+            source: "Material Encuentro 1",
+            summary: "¿Qué es? El registro escrito de una reunión de equipo. Sus elementos son: fecha y hora, participantes, agenda, acuerdos, responsables y plazos, y próxima reunión.\n\n¿Para qué sirve? Deja constancia de lo acordado y de quién se comprometió a qué, evitando la duplicidad de funciones.\n\n¿Cómo lo aplico? Redáctala al terminar cada reunión de EquipoSoft y compártela con todos los integrantes."
+          },
+          {
+            id: "herr-charter",
+            tag: "herramientas",
+            label: "Charter o acta de constitución",
+            source: "Material Encuentro 1",
+            summary: "¿Qué es? El documento que constituye formalmente el proyecto. Sus elementos son: nombre, objetivo, alcance, interesados, riesgos iniciales, cronograma general y criterios de éxito.\n\n¿Para qué sirve? Fija el acuerdo mínimo sobre qué se va a hacer y qué queda fuera, antes de empezar a construir.\n\n¿Cómo lo aplico? Redáctalo una sola vez al inicio del proyecto y úsalo como referencia cuando alguien proponga cambios."
+          },
+          {
+            id: "herr-raci",
+            tag: "herramientas",
+            label: "Matriz de roles y responsabilidades (RACI simplificado)",
+            source: "Material Encuentro 1",
+            summary: "¿Qué es? Una matriz simplificada que asigna responsabilidades. Los roles considerados son: líder, analista, desarrollador(a) y encargado(a) de pruebas.\n\n¿Para qué sirve? Elimina la ambigüedad de roles, uno de los tres problemas detectados en la vivencia de EquipoSoft.\n\n¿Cómo lo aplico? Complétala al inicio y revísala si alguien no sabe a quién le corresponde una tarea."
+          },
+          {
+            id: "herr-comunicacion",
+            tag: "herramientas",
+            label: "Matriz de comunicación",
+            source: "Material Encuentro 1",
+            summary: "¿Qué es? Un cuadro que define, para cada tipo de información, el canal, la frecuencia y el responsable.\n\n¿Para qué sirve? Ordena cómo se comunica el equipo y reduce los malentendidos por canales informales.\n\n¿Cómo lo aplico? Defínela junto con el RACI, sobre todo si el equipo tiene conectividad limitada."
+          },
+          {
+            id: "herr-criterio",
+            tag: "herramientas",
+            label: "Criterio clave: minuta vs. charter",
+            source: "Material Encuentro 1",
+            summary: "¿Qué es? La distinción esencial que debes recordar: la minuta se rehace en cada reunión; el charter se elabora una sola vez.\n\n¿Para qué sirve? Evita dos errores frecuentes: tratar el charter como documento vivo de cada sesión, o dejar de actualizar la minuta.\n\n¿Cómo lo aplico? Archiva el charter como documento base del proyecto y acumula las minutas como bitácora cronológica."
+          }
+        ]
+      },
+
+      /* ============ 4. RIESGOS ============ */
+      {
+        id: "riesgos",
+        tag: "riesgos",
+        label: "4. Gestión básica de riesgos",
+        source: "Material Encuentro 1",
+        summary: "¿Qué es? La práctica de identificar de antemano lo que puede salir mal y decidir cómo reaccionar.\n\n¿Para qué sirve? Convierte las sorpresas en decisiones ya tomadas, en lugar de apagar incendios.\n\n¿Cómo lo aplico? Construye la tabla de riesgos de tu proyecto desde la primera semana y revísala en cada reunión.",
+        children: [
+          {
+            id: "riesgo-def",
+            tag: "riesgos",
+            label: "Definición",
+            source: "Material Encuentro 1",
+            summary: "¿Qué es? Anticipar lo que puede salir mal y decidir con antelación cómo reaccionar.\n\n¿Para qué sirve? Da al equipo un plan de respuesta antes de que el problema ocurra, cuando todavía hay margen de maniobra.\n\n¿Cómo lo aplico? Dedica los primeros minutos de una reunión a preguntar: ¿qué podría impedirnos entregar esta semana?"
+          },
+          {
+            id: "riesgo-tabla",
+            tag: "riesgos",
+            label: "Tabla de riesgos",
+            source: "Material Encuentro 1",
+            summary: "¿Qué es? El instrumento que registra, para cada riesgo, su probabilidad, su impacto y la estrategia de mitigación.\n\n¿Para qué sirve? Permite priorizar: no todos los riesgos merecen la misma atención.\n\n¿Cómo lo aplico? Complétala con los tres riesgos identificados en el material y añade los propios de tu equipo.",
+            children: [
+              {
+                id: "riesgo-conectividad",
+                tag: "riesgos",
+                label: "Falta de conectividad",
+                source: "Material Encuentro 1",
+                summary: "¿Qué es? El riesgo de que la conectividad limitada impida coordinar el trabajo del equipo.\n\n¿Para qué sirve? Reconocerlo permite diseñar una estrategia de mitigación acorde con el contexto de la modalidad por encuentro.\n\n¿Cómo lo aplico? Acuerda entregables descargables y momentos de sincronización presencial durante el encuentro."
+              },
+              {
+                id: "riesgo-alcance",
+                tag: "riesgos",
+                label: "Cambio de alcance",
+                source: "Material Encuentro 1",
+                summary: "¿Qué es? El riesgo de que el alcance del proyecto crezca sin control a lo largo del semestre.\n\n¿Para qué sirve? Es uno de los tres problemas detectados en la vivencia de EquipoSoft / CaféApp.\n\n¿Cómo lo aplico? Usa el charter como línea base: todo cambio se discute, se registra en la minuta y se aprueba antes de implementarse."
+              },
+              {
+                id: "riesgo-duplicidad",
+                tag: "riesgos",
+                label: "Duplicidad de trabajo",
+                source: "Material Encuentro 1",
+                summary: "¿Qué es? El riesgo de que dos integrantes desarrollen la misma funcionalidad por no tener claras las responsabilidades.\n\n¿Para qué sirve? Identificarlo justifica la existencia del RACI y de la matriz de comunicación.\n\n¿Cómo lo aplico? Revisa el RACI antes de repartir tareas y confirma en la minuta quién hace qué."
+              }
+            ]
+          }
+        ]
+      },
+
+      /* ============ 5. UML ============ */
+      {
+        id: "uml",
+        tag: "uml",
+        label: "5. UML y vistas dinámicas",
+        source: "Programa + Material Encuentro 1",
+        summary: "¿Qué es? El lenguaje de modelado con el que se representa el comportamiento del software, con énfasis en los diagramas de vista dinámica.\n\n¿Para qué sirve? Permite describir y comunicar cómo se comporta el sistema antes de construirlo.\n\n¿Cómo lo aplico? Modela el ciclo de vida de las tareas de tu proyecto con el diagrama de máquina de estados.",
+        children: [
+          {
+            id: "uml-que",
+            tag: "uml",
+            label: "Qué modela UML dentro del componente",
+            source: "Programa + Material Encuentro 1",
+            summary: "¿Qué es? UML es el lenguaje de modelado que se usa en el componente para representar la estructura y, sobre todo, el comportamiento del software.\n\n¿Para qué sirve? Es el medio común para que el equipo y el docente hablen del sistema con el mismo vocabulario.\n\n¿Cómo lo aplico? Cada diagrama que produzcas debe responder una pregunta concreta del proyecto, no decorar el informe."
+          },
+          {
+            id: "uml-estados",
+            tag: "uml",
+            label: "Diagrama de máquina de estados",
+            source: "Material Encuentro 1",
+            summary: "¿Qué es? El diagrama de vista dinámica trabajado en el Encuentro 1: representa los estados por los que pasa un objeto y las transiciones entre ellos.\n\n¿Para qué sirve? Hace visible el ciclo de vida de una entidad del sistema, por ejemplo, una tarea del proyecto.\n\n¿Cómo lo aplico? Dibújalo para la entidad central de tu proyecto y verifica que cada transición tenga una condición clara.",
+            children: [
+              {
+                id: "uml-estados-elementos",
+                tag: "uml",
+                label: "Elementos: estado inicial, estado, transición, estado final",
+                source: "Material Encuentro 1",
+                summary: "¿Qué es? Los cuatro elementos básicos del diagrama: estado inicial, estado, transición y estado final.\n\n¿Para qué sirve? Sin ellos el diagrama queda incompleto: no se sabe dónde empieza ni dónde termina el ciclo.\n\n¿Cómo lo aplico? Verifica que todo diagrama tuyo tenga un único estado inicial y al menos un estado final."
+              },
+              {
+                id: "uml-estados-ejemplo",
+                tag: "uml",
+                label: "Ejemplo del material",
+                source: "Material Encuentro 1",
+                summary: "¿Qué es? La secuencia modelada en el material del encuentro: Inicio → Pendiente → En progreso → En revisión → Completada → Fin.\n\n¿Para qué sirve? Sirve de plantilla para modelar el ciclo de vida de las tareas de cualquier proyecto académico.\n\n¿Cómo lo aplico? Sustituye los nombres por los estados reales de las tareas de tu equipo y ajústala a tu flujo de trabajo."
+              },
+              {
+                id: "uml-estados-alternativa",
+                tag: "uml",
+                label: "Transición alternativa",
+                source: "Material Encuentro 1",
+                summary: "¿Qué es? La transición alternativa del ejemplo: En revisión [se solicitan cambios] → En progreso.\n\n¿Para qué sirve? Muestra que el ciclo de vida no es lineal: un trabajo puede regresar a una etapa anterior según una condición.\n\n¿Cómo lo aplico? Identifica en tu proyecto qué condiciones obligan a retroceder y déjalas explícitas en el diagrama."
+              }
+            ]
+          },
+          {
+            id: "uml-otros",
+            tag: "uml",
+            label: "Otros diagramas del programa: colaboración, paquetes y componentes",
+            source: "Programa del componente",
+            summary: "¿Qué es? Además de la máquina de estados, el programa contempla los diagramas de colaboración, de paquetes y de componentes.\n\n¿Para qué sirve? Amplían la vista del sistema: interacción entre objetos, organización en paquetes y estructura en componentes.\n\n¿Cómo lo aplico? Revísalos cuando tu proyecto crezca y necesites organizar el código y las interacciones."
+          },
+          {
+            id: "uml-clasificacion",
+            tag: "complemento",
+            label: "Clasificación general de diagramas UML (complemento del curso)",
+            source: "Complemento didáctico — no proviene de los archivos del programa",
+            nota: "Este nodo es un complemento del curso, agregado para cubrir «sus diferentes tipos» de diagramas. No altera ni sustituye el contenido del programa ni del material del encuentro.",
+            summary: "¿Qué es? Una clasificación general de los diagramas UML en dos grandes familias: diagramas estructurales (muestran la organización estática del sistema) y diagramas de comportamiento (muestran cómo cambia y reacciona el sistema).\n\n¿Para qué sirve? Ubica el diagrama de máquina de estados dentro del panorama completo de UML y aclara por qué se le llama diagrama de vista dinámica.\n\n¿Cómo lo aplico? Antes de dibujar, pregúntate qué necesitas comunicar: la estructura del sistema o su comportamiento."
+          }
+        ]
+      },
+
+      /* ============ 6. CASO EQUIPOSOFT ============ */
+      {
+        id: "caso",
+        tag: "caso",
+        label: "6. Caso EquipoSoft / CaféApp",
+        source: "Material Encuentro 1",
+        summary: "¿Qué es? El caso de estudio que atraviesa el Encuentro 1: un equipo de estudiantes que desarrolla CaféApp y descubre, por la vía de los hechos, la necesidad de planificar.\n\n¿Para qué sirve? Da un ejemplo concreto y cercano de todo lo que se explica en abstracto.\n\n¿Cómo lo aplico? Compara lo que le pasó a EquipoSoft con lo que está pasando en tu propio equipo y actúa antes de repetir sus errores.",
+        children: [
+          {
+            id: "caso-vivencia",
+            tag: "caso",
+            label: "La vivencia inicial y los tres problemas detectados",
+            source: "Material Encuentro 1",
+            summary: "¿Qué es? La situación de partida del caso: el equipo comienza a trabajar sin planificación y aparecen tres problemas concretos.\n\n¿Para qué sirve? Es el diagnóstico que justifica todo el Encuentro 1.\n\n¿Cómo lo aplico? Revisa si tu equipo presenta alguno de los tres síntomas y corrígelo en la próxima reunión.",
+            children: [
+              {
+                id: "caso-p1",
+                tag: "caso",
+                label: "Duplicidad de funciones",
+                source: "Material Encuentro 1",
+                summary: "¿Qué es? Dos o más integrantes desarrollan la misma funcionalidad porque nadie definió quién era responsable de qué.\n\n¿Para qué sirve? Es el primer síntoma de un equipo sin matriz de roles.\n\n¿Cómo lo aplico? Resuélvelo con el RACI simplificado: líder, analista, desarrollador(a) y encargado(a) de pruebas."
+              },
+              {
+                id: "caso-p2",
+                tag: "caso",
+                label: "Roles indefinidos",
+                source: "Material Encuentro 1",
+                summary: "¿Qué es? Los integrantes no saben con claridad qué se espera de cada uno.\n\n¿Para qué sirve? Explica por qué las tareas quedan sin hacer o se hacen dos veces.\n\n¿Cómo lo aplico? Define los roles por escrito al inicio del proyecto y confírmalos en la minuta."
+              },
+              {
+                id: "caso-p3",
+                tag: "caso",
+                label: "Cambio de alcance sin control",
+                source: "Material Encuentro 1",
+                summary: "¿Qué es? El proyecto crece con nuevas ideas que nadie aprueba ni registra.\n\n¿Para qué sirve? Es el síntoma más costoso: consume tiempo y desordena el cronograma.\n\n¿Cómo lo aplico? Usa el charter como línea base y exige que todo cambio quede registrado en la minuta."
+              }
+            ]
+          },
+          {
+            id: "caso-ejemplos",
+            tag: "caso",
+            label: "Los seis ejemplos aplicados de los anexos",
+            source: "Material Encuentro 1",
+            nota: "Los integrantes del equipo EquipoSoft mencionados en el material son Carmen García, Javier López, María Rodríguez y Luis Martínez.",
+            summary: "¿Qué es? Los seis artefactos que el material desarrolla sobre el caso: minuta de reunión, charter, matriz de roles, matriz de comunicación, tabla de riesgos y diagramas.\n\n¿Para qué sirve? Son modelos listos para adaptar a tu propio proyecto.\n\n¿Cómo lo aplico? Toma cada ejemplo como plantilla, cambia los datos por los de tu equipo y consérvalos como evidencia del proceso."
+          },
+          {
+            id: "caso-comparativa",
+            tag: "caso",
+            label: "Tabla comparativa: sin planificación vs. con planificación",
+            source: "Material Encuentro 1",
+            summary: "¿Qué es? La comparación del caso en siete dimensiones: comunicación, roles, cronograma, riesgos, cambios, motivación y resultado.\n\n¿Para qué sirve? Muestra con evidencia por qué la planificación no retrasa el proyecto: postergar los problemas sí lo hace.\n\n¿Cómo lo aplico? Úsala como argumento cuando tu equipo dude sobre invertir una sesión en planificar."
+          }
+        ]
+      }
+
+    ]
+  };
+
+  /* =========================================================================
+     MOTOR — no es necesario editarlo
+     ========================================================================= */
+
+  const NS = "http://www.w3.org/2000/svg";
+  const ANCHOS = [268, 238, 218, 202];
+  const TAMS = [15, 13.5, 12.5, 12];
+  const PADY = 10;
+  const LH = 1.35;
+  const HGAP = 74;
+  const VGAP = 14;
+  const ZOOM_MIN = 0.4;
+  const ZOOM_MAX = 2.5;
+  const VEL_ANIM = 0.24;
+  const UMBRAL = 0.25;
+
+  const ETIQUETAS = {
+    raiz: "Núcleo", temas: "Temas", planificacion: "Planificación",
+    herramientas: "Herramientas", riesgos: "Riesgos", uml: "UML",
+    caso: "Caso EquipoSoft", complemento: "Complemento del curso"
+  };
+
+  const svg = document.getElementById("mapa");
+  const capaEnlaces = document.createElementNS(NS, "g");
+  const capaNodos = document.createElementNS(NS, "g");
+  const lienzo = document.createElementNS(NS, "g");
+  lienzo.appendChild(capaEnlaces);
+  lienzo.appendChild(capaNodos);
+  svg.appendChild(lienzo);
+
+  const cabecera = document.querySelector(".cabecera");
+  const panel = document.getElementById("panel");
+  const panelTag = document.getElementById("panel-tag");
+  const panelTitulo = document.getElementById("panel-titulo");
+  const panelFuente = document.getElementById("panel-fuente");
+  const panelCuerpo = document.getElementById("panel-cuerpo");
+  const panelNota = document.getElementById("panel-nota");
+  const panelHijos = document.getElementById("panel-hijos");
+  const migas = document.getElementById("migas");
+  const buscador = document.getElementById("buscador");
+  const resultadoBusqueda = document.getElementById("resultado-busqueda");
+  const barraProgreso = document.getElementById("progreso-barra");
+  const cajaProgreso = document.getElementById("progreso-barra-caja");
+  const textoProgreso = document.getElementById("progreso-texto");
+  const btnTema = document.getElementById("btn-tema");
+  const minimapa = document.getElementById("minimapa");
+  const mmNodos = document.getElementById("mm-nodos");
+  const mmViewport = document.getElementById("mini-viewport");
+  const tooltip = document.getElementById("tooltip");
+  const ttTitulo = tooltip.querySelector(".tt-titulo");
+  const ttSub = tooltip.querySelector(".tt-sub");
+  const btnQuicknav = document.getElementById("btn-quicknav");
+  const quicknav = document.getElementById("quicknav");
+  const quicknavLista = document.getElementById("quicknav-lista");
+  const quicknavCerrar = document.getElementById("quicknav-cerrar");
+
+  const raiz = MINDMAP;
+  let todos = [];
+  const todosPorId = new Map();
+  let visibles = [];
+  let bbox = { minX: 0, minY: 0, ancho: 1, alto: 1 };
+  let activo = null;
+  let coincidencias = new Set();
+  const visitados = new Set();
+  let vista = { k: 1, x: 0, y: 0 };
+  let idPendienteFoco = null;
+
+  const nodosEstado = new Map();
+  const nodosDOM = new Map();
+  const enlacesDOM = new Map();
+  let animando = false;
+
+  /* ------- altura de la cabecera ------- */
+  function medirCabecera() {
+    if (!cabecera) return;
+    const h = Math.ceil(cabecera.getBoundingClientRect().height);
+    document.documentElement.style.setProperty("--altura-header", h + "px");
+  }
+
+  if (cabecera) {
+    if ("ResizeObserver" in window) {
+      const ro = new ResizeObserver(medirCabecera);
+      ro.observe(cabecera);
+    }
+    window.addEventListener("resize", medirCabecera);
+    window.addEventListener("orientationchange", medirCabecera);
+    medirCabecera();
+  }
+
+  /* ------- preparación del árbol ------- */
+  function preparar(nodo, padre, nivel) {
+    nodo.padre = padre;
+    nodo.nivel = nivel;
+    nodo.hijos = nodo.children || [];
+    nodo.abierto = false;
+    nodo.hijos.forEach(function (h) { preparar(h, nodo, nivel + 1); });
+  }
+
+  function medirNodos() {
+    todos.forEach(function (n) {
+      const d = Math.min(n.nivel, ANCHOS.length - 1);
+      n.w = ANCHOS[d];
+      n.fs = TAMS[d];
+      n.lineas = envolver(n.label, n.w - 42, n.fs);
+      n.h = Math.max(38, n.lineas.length * n.fs * LH + PADY * 2);
+    });
+  }
+
+  function envolver(texto, ancho, fs) {
+    const maxChars = Math.max(8, Math.floor(ancho / (fs * 0.55)));
+    const palabras = String(texto).split(" ");
+    const lineas = [];
+    let actual = "";
+    for (let i = 0; i < palabras.length; i++) {
+      const prueba = actual ? actual + " " + palabras[i] : palabras[i];
+      if (prueba.length <= maxChars || !actual) {
+        actual = prueba;
+      } else {
+        lineas.push(actual);
+        actual = palabras[i];
+      }
+    }
+    if (actual) lineas.push(actual);
+    return lineas.length ? lineas : [""];
+  }
+
+  function recolectarVisibles(nodo, lista) {
+    lista.push(nodo);
+    if (nodo.abierto) {
+      nodo.hijos.forEach(function (h) { recolectarVisibles(h, lista); });
+    }
+    return lista;
+  }
+
+  /* ------- layout ------- */
+  function calcularLayout(vis) {
+    const maxW = [];
+    vis.forEach(function (n) {
+      maxW[n.nivel] = Math.max(maxW[n.nivel] || 0, n.w);
+    });
+    const colX = [0];
+    for (let d = 1; d < maxW.length; d++) {
+      colX[d] = colX[d - 1] + (maxW[d - 1] || 0) + HGAP;
+    }
+    vis.forEach(function (n) {
+      n.x = colX[Math.min(n.nivel, colX.length - 1)];
+    });
+
+    let cursor = 0;
+    (function pos(n) {
+      if (!n.abierto || !n.hijos.length) {
+        n.y = cursor + n.h / 2;
+        cursor += n.h + VGAP;
+        return n.y;
+      }
+      const ys = n.hijos.map(pos);
+      n.y = (ys[0] + ys[ys.length - 1]) / 2;
+      return n.y;
+    })(raiz);
+
+    const columnas = {};
+    vis.forEach(function (n) {
+      if (!columnas[n.nivel]) columnas[n.nivel] = [];
+      columnas[n.nivel].push(n);
+    });
+    Object.keys(columnas).forEach(function (k) {
+      const lista = columnas[k].sort(function (a, b) { return a.y - b.y; });
+      for (let i = 1; i < lista.length; i++) {
+        const min = lista[i - 1].y + lista[i - 1].h / 2 + VGAP + lista[i].h / 2;
+        if (lista[i].y < min) lista[i].y = min;
+      }
+    });
+  }
+
+  function actualizarBBox(vis) {
+    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+    vis.forEach(function (n) {
+      if (n.x < minX) minX = n.x;
+      if (n.y - n.h / 2 < minY) minY = n.y - n.h / 2;
+      if (n.x + n.w > maxX) maxX = n.x + n.w;
+      if (n.y + n.h / 2 > maxY) maxY = n.y + n.h / 2;
+    });
+    bbox = {
+      minX: minX, minY: minY,
+      ancho: Math.max(1, maxX - minX),
+      alto: Math.max(1, maxY - minY)
+    };
+  }
+
+  /* ------- núcleo: actualización con animación ------- */
+  function actualizar(sinAnimacion) {
+    medirNodos();
+    const vis = recolectarVisibles(raiz, []);
+    visibles = vis;
+    calcularLayout(vis);
+    actualizarBBox(vis);
+
+    const visIds = new Set(vis.map(function (n) { return n.id; }));
+
+    vis.forEach(function (n) {
+      let e = nodosEstado.get(n.id);
+      if (!e) {
+        const pe = n.padre ? nodosEstado.get(n.padre.id) : null;
+        e = {
+          x: pe ? pe.x : n.x,
+          y: pe ? pe.y : n.y,
+          op: 0,
+          tx: n.x, ty: n.y, top: 1,
+          w: n.w, h: n.h
+        };
+        nodosEstado.set(n.id, e);
+      } else {
+        e.tx = n.x; e.ty = n.y; e.top = 1;
+        e.w = n.w; e.h = n.h;
+      }
+    });
+
+    nodosEstado.forEach(function (e, id) {
+      if (!visIds.has(id)) e.top = 0;
+    });
+
+    sincronizarNodosDOM(vis);
+    sincronizarEnlacesDOM(vis);
+
+    if (sinAnimacion || prefiereMenosMovimiento()) {
+      nodosEstado.forEach(function (e) {
+        e.x = e.tx; e.y = e.ty; e.op = e.top;
+      });
+      limpiarEstadosOcultos();
+      dibujar();
+      animando = false;
+    } else if (!animando) {
+      animando = true;
+      requestAnimationFrame(pasoAnimacion);
+    }
+
+    actualizarMigas();
+    dibujarMinimapa();
+  }
+
+  function prefiereMenosMovimiento() {
+    return window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  }
+
+  function pasoAnimacion() {
+    let sigue = false;
+    nodosEstado.forEach(function (e) {
+      const dx = e.tx - e.x, dy = e.ty - e.y, dop = e.top - e.op;
+      if (Math.abs(dx) > UMBRAL || Math.abs(dy) > UMBRAL || Math.abs(dop) > 0.015) {
+        e.x += dx * VEL_ANIM;
+        e.y += dy * VEL_ANIM;
+        e.op += dop * VEL_ANIM;
+        sigue = true;
+      } else {
+        e.x = e.tx; e.y = e.ty; e.op = e.top;
+      }
+    });
+    limpiarEstadosOcultos();
+    dibujar();
+    if (sigue) requestAnimationFrame(pasoAnimacion);
+    else animando = false;
+  }
+
+  function limpiarEstadosOcultos() {
+    nodosEstado.forEach(function (e, id) {
+      if (e.top === 0 && e.op < 0.02) {
+        const g = nodosDOM.get(id);
+        if (g && g.parentNode) g.parentNode.removeChild(g);
+        nodosDOM.delete(id);
+        nodosEstado.delete(id);
+      }
+    });
+    enlacesDOM.forEach(function (p, key) {
+      const ids = key.split("|");
+      if (!nodosEstado.has(ids[0]) || !nodosEstado.has(ids[1])) {
+        if (p.parentNode) p.parentNode.removeChild(p);
+        enlacesDOM.delete(key);
+      }
+    });
+  }
+
+  function sincronizarNodosDOM(vis) {
+    const visIds = new Set(vis.map(function (n) { return n.id; }));
+    vis.forEach(function (n) {
+      let g = nodosDOM.get(n.id);
+      if (!g) {
+        g = crearNodoElemento(n);
+        capaNodos.appendChild(g);
+        nodosDOM.set(n.id, g);
+        const e = nodosEstado.get(n.id);
+        g.setAttribute("transform", "translate(" + e.x + "," + (e.y - e.h / 2) + ")");
+        g.setAttribute("opacity", "0");
+      } else {
+        actualizarNodoElemento(g, n);
+      }
+    });
+    nodosDOM.forEach(function (g, id) {
+      if (!visIds.has(id)) actualizarNodoElemento(g, todosPorId.get(id), true);
+    });
+  }
+
+  function sincronizarEnlacesDOM(vis) {
+    const visIds = new Set(vis.map(function (n) { return n.id; }));
+    vis.forEach(function (n) {
+      if (!n.padre || !n.padre.abierto) return;
+      const key = n.padre.id + "|" + n.id;
+      if (!enlacesDOM.has(key)) {
+        const p = document.createElementNS(NS, "path");
+        p.setAttribute("class", "enlace tag-" + n.tag);
+        p.setAttribute("opacity", "0");
+        capaEnlaces.appendChild(p);
+        enlacesDOM.set(key, p);
+      }
+    });
+    enlacesDOM.forEach(function (p, key) {
+      const ids = key.split("|");
+      if (!visIds.has(ids[0]) || !visIds.has(ids[1])) {
+        p.setAttribute("opacity", "0");
+      }
+    });
+  }
+
+  /* ------- dibujar (por frame) ------- */
+  function dibujar() {
+    nodosDOM.forEach(function (g, id) {
+      const e = nodosEstado.get(id);
+      if (!e) return;
+      g.setAttribute("transform", "translate(" + e.x + "," + (e.y - e.h / 2) + ")");
+      g.setAttribute("opacity", String(e.op));
+    });
+
+    const hayBusqueda = coincidencias.size > 0;
+
+    enlacesDOM.forEach(function (p, key) {
+      const ids = key.split("|");
+      const pe = nodosEstado.get(ids[0]);
+      const ce = nodosEstado.get(ids[1]);
+      if (!pe || !ce) return;
+      const visible = pe.top === 1 && ce.top === 1;
+      const op = visible ? Math.min(pe.op, ce.op) : 0;
+      const x1 = pe.x + pe.w, y1 = pe.y;
+      const x2 = ce.x, y2 = ce.y;
+      const dx = Math.max(26, (x2 - x1) / 2);
+      p.setAttribute("d", "M " + x1 + " " + y1 + " C " + (x1 + dx) + " " + y1 + ", " + (x2 - dx) + " " + y2 + ", " + x2 + " " + y2);
+      const atenuado = hayBusqueda && !(coincidencias.has(ids[0]) && coincidencias.has(ids[1]));
+      p.setAttribute("opacity", String(op * (atenuado ? 0.12 : 0.5)));
+    });
+  }
+
+  function crearNodoElemento(n) {
+    const g = document.createElementNS(NS, "g");
+    g.setAttribute("class", "nodo tag-" + n.tag);
+    g.setAttribute("tabindex", "0");
+    g.setAttribute("role", "treeitem");
+    g.setAttribute("data-id", n.id);
+    g.setAttribute("aria-level", String(n.nivel + 1));
+
+    const caja = document.createElementNS(NS, "rect");
+    caja.setAttribute("class", "caja");
+    caja.setAttribute("rx", "10");
+    g.appendChild(caja);
+
+    const acento = document.createElementNS(NS, "line");
+    acento.setAttribute("class", "acento");
+    g.appendChild(acento);
+
+    const texto = document.createElementNS(NS, "text");
+    texto.setAttribute("class", "etiqueta");
+    g.appendChild(texto);
+
+    const marca = document.createElementNS(NS, "text");
+    marca.setAttribute("class", "marca");
+    marca.setAttribute("text-anchor", "middle");
+    g.appendChild(marca);
+
+    g.addEventListener("click", function (ev) { ev.stopPropagation(); activarNodo(n); });
+    g.addEventListener("dblclick", function (ev) {
+      ev.preventDefault(); ev.stopPropagation();
+      alternarSubarbol(n, !n.abierto);
+      seleccionar(n);
+      actualizar(false);
+      idPendienteFoco = n.id;
+    });
+    g.addEventListener("mouseenter", function (ev) { mostrarTooltip(n, ev.clientX, ev.clientY); });
+    g.addEventListener("mousemove", function (ev) { moverTooltip(ev.clientX, ev.clientY); });
+    g.addEventListener("mouseleave", ocultarTooltip);
+    g.addEventListener("focus", function () { mostrarTooltip(n); });
+    g.addEventListener("blur", ocultarTooltip);
+
+    return g;
+  }
+
+  function actualizarNodoElemento(g, n, desvaneciendo) {
+    const tieneHijos = n.hijos.length > 0;
+    let clase = "nodo tag-" + n.tag;
+    if (n === activo) clase += " activo";
+    if (coincidencias.size > 0) clase += coincidencias.has(n.id) ? " coincidencia" : " atenuado";
+    g.setAttribute("class", clase);
+    g.setAttribute("aria-level", String(n.nivel + 1));
+    if (tieneHijos) g.setAttribute("aria-expanded", String(!!n.abierto));
+    else g.removeAttribute("aria-expanded");
+    g.setAttribute("aria-label", n.label + (tieneHijos ? (n.abierto ? ". Expandido" : ". Contraído") : ""));
+
+    const caja = g.querySelector(".caja");
+    caja.setAttribute("width", String(n.w));
+    caja.setAttribute("height", String(n.h));
+
+    const acento = g.querySelector(".acento");
+    acento.setAttribute("x1", "7");
+    acento.setAttribute("y1", "7");
+    acento.setAttribute("x2", "7");
+    acento.setAttribute("y2", String(Math.max(8, n.h - 7)));
+
+    const texto = g.querySelector(".etiqueta");
+    while (texto.firstChild) texto.removeChild(texto.firstChild);
+    texto.setAttribute("x", "18");
+    texto.setAttribute("font-size", String(n.fs));
+    texto.setAttribute("font-weight", n.nivel === 0 ? "700" : (n.nivel === 1 ? "600" : "500"));
+    const bloque = n.lineas.length * n.fs * LH;
+    const y0 = (n.h - bloque) / 2 + n.fs * 0.95;
+    n.lineas.forEach(function (linea, i) {
+      const ts = document.createElementNS(NS, "tspan");
+      ts.setAttribute("x", "18");
+      ts.setAttribute("y", String(y0 + i * n.fs * LH));
+      ts.textContent = linea;
+      texto.appendChild(ts);
+    });
+
+    const marca = g.querySelector(".marca");
+    if (tieneHijos) {
+      marca.setAttribute("x", String(n.w - 16));
+      marca.setAttribute("y", String(n.h / 2 + 4));
+      marca.textContent = n.abierto ? "▾" : "▸";
+    } else {
+      marca.textContent = "";
+    }
+
+    if (desvaneciendo) {
+      g.setAttribute("pointer-events", "none");
+    }
+  }
+
+  /* ------- interacción ------- */
+  function activarNodo(n) {
+    if (n.hijos.length) n.abierto = !n.abierto;
+    seleccionar(n);
+    actualizar(false);
+    idPendienteFoco = n.id;
+    enfocarNodo(n);
+  }
+
+  function alternarSubarbol(n, abrir) {
+    n.hijos.forEach(function (h) {
+      if (h.hijos.length) {
+        h.abierto = abrir;
+        alternarSubarbol(h, abrir);
+      }
+    });
+    if (n.hijos.length) n.abierto = abrir;
+  }
+
+  function seleccionar(n) {
+    activo = n;
+    visitados.add(n.id);
+    actualizarProgreso();
+
+    panelTag.textContent = ETIQUETAS[n.tag] || n.tag;
+    panelTag.className = "chip tag-" + n.tag;
+    panelTitulo.textContent = n.label;
+    panelFuente.textContent = n.source ? "Fuente: " + n.source : "";
+
+    panelCuerpo.textContent = "";
+    const bloques = String(n.summary || "Sin detalle registrado.").split("\n\n");
+    bloques.forEach(function (txt) {
+      const p = document.createElement("p");
+      p.textContent = txt;
+      panelCuerpo.appendChild(p);
+    });
+
+    if (n.nota) {
+      panelNota.hidden = false;
+      panelNota.textContent = "Nota: " + n.nota;
+    } else {
+      panelNota.hidden = true;
+      panelNota.textContent = "";
+    }
+
+    panelHijos.textContent = "";
+    if (n.hijos.length) {
+      const h3 = document.createElement("h3");
+      h3.textContent = "Abre un subtema";
+      panelHijos.appendChild(h3);
+      n.hijos.forEach(function (c) {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "enlace-hijo tag-" + c.tag;
+        b.textContent = c.label;
+        b.addEventListener("click", function () {
+          n.abierto = true;
+          seleccionar(c);
+          actualizar(false);
+          idPendienteFoco = c.id;
+          enfocarNodo(c);
+        });
+        panelHijos.appendChild(b);
+      });
+    }
+
+    panel.classList.add("abierto");
+    document.body.classList.add("panel-abierto");
+    actualizarMigas();
+    dibujar();
+  }
+
+  function cerrarPanel() {
+    panel.classList.remove("abierto");
+    document.body.classList.remove("panel-abierto");
+    if (activo && idPendienteFoco === null) {
+      const g = nodosDOM.get(activo.id);
+      if (g) try { g.focus({ preventScroll: true }); } catch (e) { g.focus(); }
+    }
+  }
+
+  function actualizarMigas() {
+    if (!activo) { migas.hidden = true; migas.textContent = ""; return; }
+    migas.hidden = false;
+    migas.textContent = "";
+    const ruta = [];
+    let n = activo;
+    while (n) { ruta.unshift(n); n = n.padre; }
+    ruta.forEach(function (nodo, i) {
+      if (i > 0) {
+        const sep = document.createElement("span");
+        sep.className = "sep";
+        sep.textContent = "›";
+        migas.appendChild(sep);
+      }
+      const b = document.createElement("button");
+      b.type = "button";
+      b.textContent = nodo.label.length > 28 ? nodo.label.slice(0, 27) + "…" : nodo.label;
+      b.title = nodo.label;
+      if (nodo === activo) {
+        b.classList.add("actual");
+        b.disabled = true;
+      } else {
+        b.addEventListener("click", function () {
+          seleccionar(nodo); actualizar(false); enfocarNodo(nodo);
+        });
+      }
+      migas.appendChild(b);
+    });
+  }
+
+  function actualizarProgreso() {
+    const total = todos.length || 1;
+    const pct = Math.round((visitados.size / total) * 100);
+    barraProgreso.style.width = pct + "%";
+    cajaProgreso.setAttribute("aria-valuenow", String(pct));
+    textoProgreso.textContent = visitados.size + " de " + todos.length + " nodos visitados";
+  }
+
+  /* ------- vista ------- */
+  function aplicarVista() {
+    lienzo.setAttribute("transform", "translate(" + vista.x + " " + vista.y + ") scale(" + vista.k + ")");
+    dibujarMinimapa();
+  }
+
+  function zoomAbsoluto(px, py, k2) {
+    k2 = Math.min(ZOOM_MAX, Math.max(ZOOM_MIN, k2));
+    const real = k2 / vista.k;
+    vista.x = px - (px - vista.x) * real;
+    vista.y = py - (py - vista.y) * real;
+    vista.k = k2;
+    aplicarVista();
+  }
+
+  function zoomEn(px, py, factor) { zoomAbsoluto(px, py, vista.k * factor); }
+
+  function centrar() {
+    const r = svg.getBoundingClientRect();
+    if (!r.width || !r.height) return;
+    const k = Math.min(ZOOM_MAX, Math.max(ZOOM_MIN, Math.min((r.width - 36) / bbox.ancho, (r.height - 36) / bbox.alto)));
+    vista.k = k;
+    vista.x = (r.width - bbox.ancho * k) / 2 - bbox.minX * k;
+    vista.y = (r.height - bbox.alto * k) / 2 - bbox.minY * k;
+    aplicarVista();
+  }
+
+  function enfocarNodo(n) {
+    const r = svg.getBoundingClientRect();
+    if (!r.width || !r.height) return;
+    const objetivoK = Math.max(vista.k, 0.85);
+    const destino = {
+      k: objetivoK,
+      x: r.width / 2 - (n.x + n.w / 2) * objetivoK,
+      y: r.height / 2 - n.y * objetivoK
+    };
+    animarVista(destino, 320);
+  }
+
+  function animarVista(destino, duracion) {
+    if (prefiereMenosMovimiento()) {
+      vista.k = destino.k; vista.x = destino.x; vista.y = destino.y;
+      aplicarVista();
+      return;
+    }
+    const inicio = { k: vista.k, x: vista.x, y: vista.y };
+    const t0 = performance.now();
+    (function paso(t) {
+      const p = Math.min(1, (t - t0) / duracion);
+      const e = 1 - Math.pow(1 - p, 3);
+      vista.k = inicio.k + (destino.k - inicio.k) * e;
+      vista.x = inicio.x + (destino.x - inicio.x) * e;
+      vista.y = inicio.y + (destino.y - inicio.y) * e;
+      aplicarVista();
+      if (p < 1) requestAnimationFrame(paso);
+    })(t0);
+  }
+
+  /* ------- punteros: pan, pinza e inercia ------- */
+  const punteros = new Map();
+  let arrastrando = false;
+  let ultimoPunto = null;
+  let pinzaInicial = null;
+  let velocidad = { x: 0, y: 0 };
+  let ultimoTiempo = 0;
+  let inerciaActiva = false;
+
+  function distanciaPinza() {
+    const v = Array.from(punteros.values());
+    return Math.hypot(v[0].x - v[1].x, v[0].y - v[1].y);
+  }
+  function centroPinza() {
+    const v = Array.from(punteros.values());
+    const r = svg.getBoundingClientRect();
+    return { x: (v[0].x + v[1].x) / 2 - r.left, y: (v[0].y + v[1].y) / 2 - r.top };
+  }
+
+  svg.addEventListener("pointerdown", function (e) {
+    punteros.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    inerciaActiva = false;
+
+    if (punteros.size === 2) {
+      arrastrando = false;
+      pinzaInicial = { d: distanciaPinza(), k: vista.k, c: centroPinza() };
+      return;
+    }
+    if (punteros.size === 1) {
+      const sobreNodo = e.target && e.target.closest && e.target.closest(".nodo");
+      if (!sobreNodo) {
+        arrastrando = true;
+        ultimoPunto = { x: e.clientX, y: e.clientY };
+        velocidad = { x: 0, y: 0 };
+        ultimoTiempo = performance.now();
+        svg.classList.add("arrastrando");
+        try { svg.setPointerCapture(e.pointerId); } catch (err) {}
+      }
+    }
+  });
+
+  svg.addEventListener("pointermove", function (e) {
+    if (punteros.has(e.pointerId)) punteros.set(e.pointerId, { x: e.clientX, y: e.clientY });
+
+    if (punteros.size >= 2 && pinzaInicial) {
+      const d = distanciaPinza();
+      if (pinzaInicial.d > 0) {
+        const c = centroPinza();
+        zoomAbsoluto(pinzaInicial.c.x, pinzaInicial.c.y, pinzaInicial.k * (d / pinzaInicial.d));
+        vista.x += c.x - pinzaInicial.c.x;
+        vista.y += c.y - pinzaInicial.c.y;
+        pinzaInicial.c = c;
+        aplicarVista();
+      }
+      return;
+    }
+
+    if (!arrastrando || !ultimoPunto) return;
+    const dx = e.clientX - ultimoPunto.x;
+    const dy = e.clientY - ultimoPunto.y;
+    const ahora = performance.now();
+    const dt = Math.max(1, ahora - ultimoTiempo);
+    velocidad.x = 0.7 * velocidad.x + 0.3 * (dx / dt * 16);
+    velocidad.y = 0.7 * velocidad.y + 0.3 * (dy / dt * 16);
+    ultimoTiempo = ahora;
+    vista.x += dx;
+    vista.y += dy;
+    ultimoPunto = { x: e.clientX, y: e.clientY };
+    aplicarVista();
+  });
+
+  function soltarPuntero(e) {
+    punteros.delete(e.pointerId);
+    if (punteros.size < 2) pinzaInicial = null;
+    if (punteros.size === 0) {
+      const estabaArrastrando = arrastrando;
+      arrastrando = false;
+      ultimoPunto = null;
+      svg.classList.remove("arrastrando");
+      if (estabaArrastrando && (Math.abs(velocidad.x) > 0.4 || Math.abs(velocidad.y) > 0.4)) {
+        iniciarInercia();
+      }
+    }
+  }
+  svg.addEventListener("pointerup", soltarPuntero);
+  svg.addEventListener("pointercancel", soltarPuntero);
+  svg.addEventListener("pointerleave", function (e) {
+    if (punteros.has(e.pointerId)) soltarPuntero(e);
+  });
+
+  function iniciarInercia() {
+    if (inerciaActiva) return;
+    inerciaActiva = true;
+    (function paso() {
+      if (!inerciaActiva) return;
+      vista.x += velocidad.x;
+      vista.y += velocidad.y;
+      velocidad.x *= 0.92;
+      velocidad.y *= 0.92;
+      aplicarVista();
+      if (Math.abs(velocidad.x) > 0.15 || Math.abs(velocidad.y) > 0.15) {
+        requestAnimationFrame(paso);
+      } else {
+        inerciaActiva = false;
+      }
+    })();
+  }
+
+  svg.addEventListener("wheel", function (e) {
+    e.preventDefault();
+    const r = svg.getBoundingClientRect();
+    const px = e.clientX - r.left, py = e.clientY - r.top;
+    zoomEn(px, py, Math.exp(-e.deltaY * 0.0016));
+  }, { passive: false });
+
+  /* ------- teclado ------- */
+  svg.addEventListener("keydown", function (e) {
+    const g = e.target && e.target.closest ? e.target.closest(".nodo") : null;
+    if (!g) return;
+    const id = g.getAttribute("data-id");
+    const nodo = todosPorId.get(id);
+    if (!nodo) return;
+    const idx = visibles.indexOf(nodo);
+
+    if (e.key === "Enter" || e.key === " " || e.key === "Spacebar") {
+      e.preventDefault(); activarNodo(nodo);
+    } else if (e.key === "Escape") {
+      e.preventDefault(); cerrarPanel();
+    } else if (e.key === "ArrowRight") {
+      e.preventDefault();
+      if (nodo.hijos.length && !nodo.abierto) {
+        nodo.abierto = true; seleccionar(nodo); actualizar(false); idPendienteFoco = nodo.id;
+      } else if (nodo.hijos.length && nodo.abierto) {
+        enfocarId(nodo.hijos[0].id);
+      }
+    } else if (e.key === "ArrowLeft") {
+      e.preventDefault();
+      if (nodo.hijos.length && nodo.abierto) {
+        nodo.abierto = false; seleccionar(nodo); actualizar(false); idPendienteFoco = nodo.id;
+      } else if (nodo.padre) {
+        enfocarId(nodo.padre.id);
+      }
+    } else if (e.key === "ArrowDown") {
+      e.preventDefault();
+      if (idx >= 0 && idx < visibles.length - 1) enfocarId(visibles[idx + 1].id);
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      if (idx > 0) enfocarId(visibles[idx - 1].id);
+    }
+  });
+
+  function enfocarId(id) {
+    const g = nodosDOM.get(id);
+    if (g) {
+      try { g.focus({ preventScroll: true }); } catch (err) { g.focus(); }
+      const n = todosPorId.get(id);
+      if (n) {
+        const r = svg.getBoundingClientRect();
+        const x = (n.x + n.w / 2) * vista.k + vista.x;
+        const y = n.y * vista.k + vista.y;
+        const m = 70;
+        let dx = 0, dy = 0;
+        if (x < m) dx = m - x;
+        if (x > r.width - m) dx = (r.width - m) - x;
+        if (y < m) dy = m - y;
+        if (y > r.height - m) dy = (r.height - m) - y;
+        if (dx || dy) {
+          vista.x += dx; vista.y += dy;
+          aplicarVista();
+        }
+      }
+    }
+  }
+
+  /* ------- tooltip ------- */
+  function mostrarTooltip(n, cx, cy) {
+    tooltip.hidden = false;
+    ttTitulo.textContent = n.label;
+    const resumen = String(n.summary || "").split("\n\n")[0];
+    ttSub.textContent = resumen.length > 110 ? resumen.slice(0, 108) + "…" : resumen;
+    if (typeof cx === "number" && typeof cy === "number") moverTooltip(cx, cy);
+    else {
+      const g = nodosDOM.get(n.id);
+      if (g) {
+        const b = g.getBoundingClientRect();
+        moverTooltip(b.left + b.width + 12, b.top + b.height / 2);
+      }
+    }
+    requestAnimationFrame(function () { tooltip.classList.add("visible"); });
+  }
+
+  function moverTooltip(cx, cy) {
+    const r = tooltip.getBoundingClientRect();
+    let x = cx + 14, y = cy + 14;
+    if (x + r.width > window.innerWidth - 8) x = cx - r.width - 14;
+    if (y + r.height > window.innerHeight - 8) y = cy - r.height - 14;
+    tooltip.style.left = Math.max(8, x) + "px";
+    tooltip.style.top = Math.max(8, y) + "px";
+  }
+
+  function ocultarTooltip() {
+    tooltip.classList.remove("visible");
+    setTimeout(function () { if (!tooltip.classList.contains("visible")) tooltip.hidden = true; }, 160);
+  }
+
+  /* ------- buscador ------- */
+  let tempBusqueda = null;
+  buscador.addEventListener("input", function () {
+    if (tempBusqueda) clearTimeout(tempBusqueda);
+    tempBusqueda = setTimeout(ejecutarBusqueda, 130);
+  });
+
+  function ejecutarBusqueda() {
+    const q = buscador.value.trim().toLowerCase();
+    coincidencias = new Set();
+    if (!q) {
+      resultadoBusqueda.textContent = "";
+      actualizar(false);
+      return;
+    }
+    todos.forEach(function (n) {
+      const texto = (n.label + " " + (n.summary || "") + " " + (n.source || "") + " " + (n.nota || "")).toLowerCase();
+      if (texto.indexOf(q) !== -1) coincidencias.add(n.id);
+    });
+    todos.forEach(function (n) {
+      if (coincidencias.has(n.id)) {
+        let p = n.padre;
+        while (p) { p.abierto = true; p = p.padre; }
+      }
+    });
+    resultadoBusqueda.textContent = coincidencias.size === 0
+      ? "Sin resultados"
+      : coincidencias.size + (coincidencias.size === 1 ? " coincidencia" : " coincidencias");
+    actualizar(false);
+  }
+
+  /* ------- barra de herramientas ------- */
+  document.querySelector(".botones").addEventListener("click", function (e) {
+    const b = e.target.closest("button");
+    if (!b) return;
+    const accion = b.getAttribute("data-accion");
+    const r = svg.getBoundingClientRect();
+    const cx = r.width / 2, cy = r.height / 2;
+
+    if (accion === "expandir") {
+      todos.forEach(function (n) { if (n.hijos.length) n.abierto = true; });
+      actualizar(false);
+      animarVista(calcularVistaCentrada(), 340);
+    } else if (accion === "contraer") {
+      todos.forEach(function (n) { n.abierto = false; });
+      raiz.abierto = true;
+      actualizar(false);
+      animarVista(calcularVistaCentrada(), 340);
+    } else if (accion === "centrar") {
+      animarVista(calcularVistaCentrada(), 320);
+    } else if (accion === "zoom-mas") {
+      zoomEn(cx, cy, 1.25);
+    } else if (accion === "zoom-menos") {
+      zoomEn(cx, cy, 0.8);
+    } else if (accion === "restablecer") {
+      todos.forEach(function (n) { n.abierto = false; });
+      raiz.abierto = true;
+      buscador.value = "";
+      resultadoBusqueda.textContent = "";
+      coincidencias = new Set();
+      activo = null;
+      cerrarPanel();
+      actualizar(false);
+      animarVista(calcularVistaCentrada(), 340);
+    }
+  });
+
+  function calcularVistaCentrada() {
+    const r = svg.getBoundingClientRect();
+    const k = Math.min(ZOOM_MAX, Math.max(ZOOM_MIN, Math.min((r.width - 36) / bbox.ancho, (r.height - 36) / bbox.alto)));
+    return {
+      k: k,
+      x: (r.width - bbox.ancho * k) / 2 - bbox.minX * k,
+      y: (r.height - bbox.alto * k) / 2 - bbox.minY * k
+    };
+  }
+
+  document.getElementById("panel-cerrar").addEventListener("click", cerrarPanel);
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") {
+      if (quicknav.classList.contains("abierto")) cerrarQuicknav();
+      else if (panel.classList.contains("abierto")) cerrarPanel();
+    }
+  });
+
+  /* ------- minimapa ------- */
+  function dibujarMinimapa() {
+    const W = 160, H = 120, PAD = 6;
+    const k = Math.min((W - PAD * 2) / bbox.ancho, (H - PAD * 2) / bbox.alto);
+    const offX = PAD + (W - PAD * 2 - bbox.ancho * k) / 2 - bbox.minX * k;
+    const offY = PAD + (H - PAD * 2 - bbox.alto * k) / 2 - bbox.minY * k;
+
+    while (mmNodos.firstChild) mmNodos.removeChild(mmNodos.firstChild);
+
+    visibles.forEach(function (n) {
+      const e = nodosEstado.get(n.id);
+      if (!e || e.op < 0.4) return;
+      const rect = document.createElementNS(NS, "rect");
+      rect.setAttribute("class", "mm-nodo tag-" + n.tag);
+      rect.setAttribute("x", String(e.x * k + offX));
+      rect.setAttribute("y", String((e.y - e.h / 2) * k + offY));
+      rect.setAttribute("width", String(Math.max(2, n.w * k)));
+      rect.setAttribute("height", String(Math.max(2, n.h * k)));
+      rect.setAttribute("rx", "2");
+      mmNodos.appendChild(rect);
+    });
+
+    const r = svg.getBoundingClientRect();
+    if (!r.width || !r.height) return;
+    const vx = (-vista.x / vista.k) * k + offX;
+    const vy = (-vista.y / vista.k) * k + offY;
+    const vw = (r.width / vista.k) * k;
+    const vh = (r.height / vista.k) * k;
+    mmViewport.setAttribute("x", String(vx));
+    mmViewport.setAttribute("y", String(vy));
+    mmViewport.setAttribute("width", String(Math.max(4, vw)));
+    mmViewport.setAttribute("height", String(Math.max(4, vh)));
+  }
+
+  minimapa.addEventListener("click", function (e) {
+    const rect = minimapa.getBoundingClientRect();
+    const px = (e.clientX - rect.left) / rect.width * 160;
+    const py = (e.clientY - rect.top) / rect.height * 120;
+    const W = 160, H = 120, PAD = 6;
+    const k = Math.min((W - PAD * 2) / bbox.ancho, (H - PAD * 2) / bbox.alto);
+    const offX = PAD + (W - PAD * 2 - bbox.ancho * k) / 2 - bbox.minX * k;
+    const offY = PAD + (H - PAD * 2 - bbox.alto * k) / 2 - bbox.minY * k;
+    const worldX = (px - offX) / k;
+    const worldY = (py - offY) / k;
+    const r = svg.getBoundingClientRect();
+    const destino = {
+      k: vista.k,
+      x: r.width / 2 - worldX * vista.k,
+      y: r.height / 2 - worldY * vista.k
+    };
+    animarVista(destino, 280);
+  });
+
+  /* ------- navegación rápida ------- */
+  function construirQuicknav() {
+    quicknavLista.textContent = "";
+    raiz.hijos.forEach(function (rama) {
+      const li = document.createElement("li");
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "rama tag-" + rama.tag;
+      b.appendChild(document.createTextNode(rama.label));
+      const sub = document.createElement("span");
+      sub.className = "sub";
+      sub.textContent = (rama.hijos ? rama.hijos.length : 0) + " subtemas";
+      b.appendChild(sub);
+      b.addEventListener("click", function () {
+        raiz.abierto = true;
+        rama.abierto = true;
+        seleccionar(rama);
+        actualizar(false);
+        cerrarQuicknav();
+        setTimeout(function () { enfocarNodo(rama); }, 60);
+      });
+      li.appendChild(b);
+      quicknavLista.appendChild(li);
+    });
+  }
+
+  function abrirQuicknav() {
+    quicknav.classList.add("abierto");
+    quicknav.setAttribute("aria-hidden", "false");
+    btnQuicknav.setAttribute("aria-expanded", "true");
+  }
+  function cerrarQuicknav() {
+    quicknav.classList.remove("abierto");
+    quicknav.setAttribute("aria-hidden", "true");
+    btnQuicknav.setAttribute("aria-expanded", "false");
+  }
+  btnQuicknav.addEventListener("click", function () {
+    if (quicknav.classList.contains("abierto")) cerrarQuicknav();
+    else abrirQuicknav();
+  });
+  quicknavCerrar.addEventListener("click", cerrarQuicknav);
+
+  /* ------- tema ------- */
+  function aplicarTema(tema) {
+    document.documentElement.setAttribute("data-tema", tema);
+    btnTema.textContent = tema === "oscuro" ? "◑" : "◐";
+    btnTema.setAttribute("aria-label", tema === "oscuro" ? "Cambiar a tema claro" : "Cambiar a tema oscuro");
+    try { localStorage.setItem("mapa-is2-tema", tema); } catch (err) {}
+    dibujarMinimapa();
+  }
+  btnTema.addEventListener("click", function () {
+    const actual = document.documentElement.getAttribute("data-tema");
+    aplicarTema(actual === "oscuro" ? "claro" : "oscuro");
+  });
+  (function iniciarTema() {
+    let guardado = null;
+    try { guardado = localStorage.getItem("mapa-is2-tema"); } catch (err) { guardado = null; }
+    if (!guardado) {
+      const prefiereOscuro = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+      guardado = prefiereOscuro ? "oscuro" : "claro";
+    }
+    aplicarTema(guardado);
+  })();
+
+  /* ------- arranque ------- */
+  preparar(raiz, null, 0);
+  raiz.abierto = true;
+  todos = [];
+  (function indexar(n) {
+    todos.push(n);
+    todosPorId.set(n.id, n);
+    n.hijos.forEach(indexar);
+  })(raiz);
+
+  medirNodos();
+  construirQuicknav();
+  actualizar(true);
+  actualizarProgreso();
+  centrar();
+
+  window.addEventListener("resize", function () {
+    if (Math.abs(vista.k - 1) < 0.0001) centrar();
+    dibujarMinimapa();
+  });
+
+})();
+</script>
+</body>
+</html>
