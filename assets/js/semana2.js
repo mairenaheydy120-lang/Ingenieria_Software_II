@@ -24,13 +24,13 @@ window.SEMANA = {
       <tr><td>Mensaje</td><td>Número: operación(args) + flecha</td><td>1.2: crear(datos) →</td></tr>
       <tr><td>Guarda</td><td>[condición]</td><td>1.5 [hayConexión]: enviar(c)</td></tr>
       <tr><td>Iteración</td><td>Asterisco después del número</td><td>2*: sincronizar(r)</td></tr></table></div>
-      <figure class="fig"><img src="assets/img/colaboracion.png" alt="Diagrama de colaboración del escenario Registrar cosecha" loading="lazy"><figcaption>Escenario "Registrar cosecha" en CaféApp</figcaption></figure>
+      <figure class="fig"><img src="../assets/img/colaboracion.png" alt="Diagrama de colaboración del escenario Registrar cosecha" loading="lazy"><figcaption>Escenario "Registrar cosecha" en CaféApp</figcaption></figure>
       <div class="note tip"><b>Lectura:</b> el productor envía <i>1: registrarCosecha</i> a la pantalla; esta delega al controlador (1.1), que crea y valida la cosecha (1.2 y 1.3), la guarda localmente (1.4) y la envía al servidor si hay conexión (1.5) o la encola si no la hay (1.6).</div>` },
     { t: '2. Diagrama de paquetes', html: `
       <p>Un <b>paquete</b> agrupa elementos relacionados bajo un nombre, como una carpeta. El diagrama muestra la organización del sistema y las <b>dependencias</b> (flecha discontinua) entre paquetes.</p>
       <ul><li><b>«import»</b>: los elementos públicos del destino se agregan al espacio de nombres del origen.</li>
       <li><b>«access»</b>: se accede sin importar los nombres.</li><li><b>«use»</b>: dependencia general de uso.</li></ul>
-      <figure class="fig"><img src="assets/img/paquetes.png" alt="Diagrama de paquetes de CaféApp" loading="lazy"><figcaption>CaféApp organizada en paquetes por capas</figcaption></figure>
+      <figure class="fig"><img src="../assets/img/paquetes.png" alt="Diagrama de paquetes de CaféApp" loading="lazy"><figcaption>CaféApp organizada en paquetes por capas</figcaption></figure>
       <div class="note"><b>Buenas prácticas:</b> alta cohesión dentro del paquete, bajo acoplamiento entre paquetes y <b>ninguna dependencia cíclica</b>.</div>` },
     { t: '3. Diagrama de componentes', html: `
       <p>Un <b>componente</b> es una parte modular, desplegable y reemplazable que se comunica solo mediante <b>interfaces</b>.</p>
@@ -38,11 +38,11 @@ window.SEMANA = {
       <tr><td>Interfaz provista (piruleta ○—)</td><td>Lo que el componente ofrece a otros.</td></tr>
       <tr><td>Interfaz requerida (enchufe ⊂—)</td><td>Lo que el componente necesita de otros.</td></tr>
       <tr><td>Artefacto</td><td>Archivo físico que implementa el componente (.apk, .jar).</td></tr></table></div>
-      <figure class="fig"><img src="assets/img/componentes.png" alt="Diagrama de componentes de CaféApp" loading="lazy"><figcaption>Componentes del teléfono y del servidor</figcaption></figure>
+      <figure class="fig"><img src="../assets/img/componentes.png" alt="Diagrama de componentes de CaféApp" loading="lazy"><figcaption>Componentes del teléfono y del servidor</figcaption></figure>
       <div class="note tip">Mientras se respete la interfaz <i>ICosechasAPI</i>, el servidor puede reemplazarse sin tocar la app móvil: esa es la ventaja de pensar en componentes.</div>` },
     { t: '4. Metodología OMT', html: `
       <p>La <b>Object Modeling Technique</b> (Rumbaugh et al., 1991) describe el sistema con tres modelos y avanza en cuatro fases: análisis, diseño del sistema, diseño de objetos e implementación.</p>
-      <figure class="fig"><img src="assets/img/omt.png" alt="Fases y modelos de OMT" loading="lazy"><figcaption>Fases y modelos de OMT</figcaption></figure>
+      <figure class="fig"><img src="../assets/img/omt.png" alt="Fases y modelos de OMT" loading="lazy"><figcaption>Fases y modelos de OMT</figcaption></figure>
       <div class="tablewrap"><table><tr><th>Modelo</th><th>Describe</th><th>Hoy en UML</th></tr>
       <tr><td>De objetos</td><td>Estructura estática</td><td>Diagrama de clases</td></tr>
       <tr><td>Dinámico</td><td>Estados y eventos</td><td>Máquina de estados, secuencia</td></tr>
@@ -54,16 +54,16 @@ window.SEMANA = {
       <tr><td>Elaboración</td><td>Arquitectura estable, mitigar riesgos</td><td>Arquitectura del ciclo de vida</td></tr>
       <tr><td>Construcción</td><td>Desarrollar el producto en iteraciones</td><td>Capacidad operativa inicial</td></tr>
       <tr><td>Transición</td><td>Entregar, capacitar, corregir</td><td>Lanzamiento del producto</td></tr></table></div>
-      <figure class="fig"><img src="assets/img/rup.png" alt="Gráfico de jorobas de RUP" loading="lazy"><figcaption>Intensidad de las disciplinas en cada fase</figcaption></figure>` },
+      <figure class="fig"><img src="../assets/img/rup.png" alt="Gráfico de jorobas de RUP" loading="lazy"><figcaption>Intensidad de las disciplinas en cada fase</figcaption></figure>` },
     { t: '6. Manifiesto Ágil y Scrum', html: `
       <p>El <b>Manifiesto Ágil</b> (2001) valora: individuos e interacciones sobre procesos y herramientas; software funcionando sobre documentación extensiva; colaboración con el cliente sobre negociación contractual; respuesta ante el cambio sobre seguir un plan.</p>
-      <figure class="fig"><img src="assets/img/scrum.png" alt="Ciclo de Scrum" loading="lazy"><figcaption>Ciclo de Scrum</figcaption></figure>
+      <figure class="fig"><img src="../assets/img/scrum.png" alt="Ciclo de Scrum" loading="lazy"><figcaption>Ciclo de Scrum</figcaption></figure>
       <div class="tablewrap"><table><tr><th>Roles</th><th>Eventos</th><th>Artefactos</th></tr>
       <tr><td>Product Owner<br>Scrum Master<br>Developers</td><td>Sprint<br>Sprint Planning<br>Daily Scrum (15 min)<br>Sprint Review<br>Sprint Retrospective</td><td>Product Backlog<br>Sprint Backlog<br>Incremento (Definition of Done)</td></tr></table></div>
       <div class="note tip"><b>Historia de usuario:</b> <i>Como productor, quiero registrar mi cosecha sin conexión para no perder datos en la finca.</i></div>` },
     { t: '7. Kanban', html: `
       <p><b>Kanban</b> visualiza el trabajo en un tablero y <b>limita el trabajo en curso (WIP)</b>. No tiene Sprints ni roles obligatorios; el trabajo fluye de forma continua.</p>
-      <figure class="fig"><img src="assets/img/kanban.png" alt="Tablero Kanban" loading="lazy"><figcaption>Tablero Kanban con límites WIP</figcaption></figure>
+      <figure class="fig"><img src="../assets/img/kanban.png" alt="Tablero Kanban" loading="lazy"><figcaption>Tablero Kanban con límites WIP</figcaption></figure>
       <ul><li><b>Lead time:</b> desde que se solicita la tarea hasta que se entrega.</li><li><b>Cycle time:</b> desde que se empieza hasta que se termina.</li></ul>` },
     { t: '8. Programación Extrema (XP)', html: `
       <p><b>XP</b> (Kent Beck) se centra en prácticas técnicas. Valores: comunicación, simplicidad, retroalimentación, valentía y respeto.</p>

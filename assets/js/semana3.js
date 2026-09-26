@@ -26,9 +26,9 @@ window.SEMANA = {
       <tr><td>Mantenibilidad</td><td>¿Es fácil de cambiar?</td><td>Bajo acoplamiento, componentes pequeños</td></tr>
       <tr><td>Escalabilidad</td><td>¿Crece sin rehacerse?</td><td>Servicios que escalan por separado</td></tr></table></div>` },
     { t: '2. Estilos arquitectónicos: capas y MVC', html: `
-      <figure class="fig"><img src="assets/img/capas.png" alt="Arquitectura en capas" loading="lazy"><figcaption>Arquitectura en capas de CaféApp</figcaption></figure>
+      <figure class="fig"><img src="../assets/img/capas.png" alt="Arquitectura en capas" loading="lazy"><figcaption>Arquitectura en capas de CaféApp</figcaption></figure>
       <p>En la arquitectura en <b>capas</b>, cada capa usa solo la de abajo: presentación → negocio → datos → base de datos.</p>
-      <figure class="fig"><img src="assets/img/mvc.png" alt="Patrón Modelo Vista Controlador" loading="lazy"><figcaption>Modelo-Vista-Controlador</figcaption></figure>
+      <figure class="fig"><img src="../assets/img/mvc.png" alt="Patrón Modelo Vista Controlador" loading="lazy"><figcaption>Modelo-Vista-Controlador</figcaption></figure>
       <p><b>MVC</b> separa los datos y reglas (<b>Modelo</b>), la presentación (<b>Vista</b>) y la gestión de eventos (<b>Controlador</b>). Permite varias vistas del mismo modelo.</p>
       <div class="note">Otros estilos: <b>cliente-servidor</b> (datos centralizados) y <b>microservicios</b> (servicios pequeños desplegados por separado).</div>` },
     { t: '3. Patrones de diseño (GoF)', html: `
@@ -36,7 +36,7 @@ window.SEMANA = {
       <tr><td>Creacionales</td><td>Cómo se crean los objetos</td><td>Singleton, Factory Method, Builder</td></tr>
       <tr><td>Estructurales</td><td>Cómo se combinan clases y objetos</td><td>Adapter, Facade, Decorator</td></tr>
       <tr><td>De comportamiento</td><td>Cómo se comunican y reparten tareas</td><td>Observer, Strategy, State</td></tr></table></div>
-      <figure class="fig"><img src="assets/img/observer.png" alt="Patrón Observer" loading="lazy"><figcaption>Patrón Observer: los precios del café notifican a sus observadores</figcaption></figure>
+      <figure class="fig"><img src="../assets/img/observer.png" alt="Patrón Observer" loading="lazy"><figcaption>Patrón Observer: los precios del café notifican a sus observadores</figcaption></figure>
       <pre style="background:var(--surface-2);padding:12px;border-radius:10px;overflow-x:auto;font-size:13px"><code>interface Observador { fun actualizar(precio: Double) }
 class ServicioPrecios {
     private val observadores = mutableListOf&lt;Observador&gt;()
@@ -45,7 +45,7 @@ class ServicioPrecios {
 }</code></pre>` },
     { t: '4. Arquitectura Dirigida por Modelos (MDA)', html: `
       <p>Propuesta por el <b>OMG</b> en 2001: los <b>modelos</b> son el artefacto central y el código se obtiene mediante <b>transformaciones</b>.</p>
-      <figure class="fig"><img src="assets/img/mda.png" alt="Niveles de MDA" loading="lazy"><figcaption>CIM → PIM → PSM → código</figcaption></figure>
+      <figure class="fig"><img src="../assets/img/mda.png" alt="Niveles de MDA" loading="lazy"><figcaption>CIM → PIM → PSM → código</figcaption></figure>
       <div class="tablewrap"><table><tr><th>Modelo</th><th>Contenido</th><th>Ejemplo</th></tr>
       <tr><td>CIM</td><td>Negocio, sin software</td><td>Entrega de café al beneficio</td></tr>
       <tr><td>PIM</td><td>Solución UML sin tecnología</td><td>Clases Productor, Cosecha</td></tr>
@@ -54,7 +54,7 @@ class ServicioPrecios {
       <div class="note tip"><b>Beneficios:</b> portabilidad, productividad, documentación actualizada. <b>Limitaciones:</b> herramientas especializadas (EMF, Papyrus, Acceleo) y curva de aprendizaje.</div>` },
     { t: '5. Arquitectura Orientada a Servicios (SOA)', html: `
       <p>Organiza el sistema como <b>servicios</b> autónomos y reutilizables que se comunican mediante <b>contratos</b>.</p>
-      <figure class="fig"><img src="assets/img/soa.png" alt="Arquitectura orientada a servicios" loading="lazy"><figcaption>Varios consumidores reutilizan los mismos servicios</figcaption></figure>
+      <figure class="fig"><img src="../assets/img/soa.png" alt="Arquitectura orientada a servicios" loading="lazy"><figcaption>Varios consumidores reutilizan los mismos servicios</figcaption></figure>
       <p><b>Elementos:</b> proveedor, consumidor, contrato (WSDL u OpenAPI), registro de servicios y bus de servicios (ESB) o API Gateway.</p>
       <p><b>Principios (Erl):</b> contrato estandarizado, bajo acoplamiento, abstracción, reutilización, autonomía, sin estado, descubrimiento y composición.</p>
       <div class="tablewrap"><table><tr><th></th><th>SOAP</th><th>REST</th></tr>
@@ -66,7 +66,7 @@ class ServicioPrecios {
       <li><b>Dependencias y ruta crítica:</b> la secuencia más larga determina la duración total.</li>
       <li><b>Hitos:</b> eventos clave sin duración (Beta lista, Entrega).</li>
       <li><b>Gantt:</b> barras en el tiempo para dar seguimiento.</li></ol>
-      <figure class="fig"><img src="assets/img/gantt.png" alt="Diagrama de Gantt" loading="lazy"><figcaption>Cronograma de CaféApp</figcaption></figure>
+      <figure class="fig"><img src="../assets/img/gantt.png" alt="Diagrama de Gantt" loading="lazy"><figcaption>Cronograma de CaféApp</figcaption></figure>
       <div class="note"><b>Ejemplo:</b> O = 4, M = 6, P = 14 → Te = (4 + 24 + 14) / 6 = <b>7 días</b>.</div>` },
     { t: '7. Cierre integrador: plan de proyecto simplificado', html: `
       <ol><li>Portada y descripción</li><li>Charter</li><li>Minuta</li><li>Matriz de roles y de comunicación</li><li>Matriz de riesgos</li>
