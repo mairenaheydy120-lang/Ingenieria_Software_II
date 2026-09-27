@@ -15,6 +15,12 @@ window.SEMANA = {
     'El Manifiesto Ágil (2001) valora individuos, software funcionando, colaboración con el cliente y respuesta al cambio.',
     'No existe la "mejor" metodología: se elige la más adecuada al proyecto, al equipo y al cliente.'
   ],
+  recursos: [
+    { t: 'EquipoSoft: Eligiendo la Metodología Correcta',
+      d: 'Caso práctico paso a paso: cómo el equipo compara <b>OMT, RUP, Scrum, Kanban y XP</b> y justifica su elección según el proyecto, el equipo y el cliente.',
+      href: 'ejemplos/equiposoft-eligiendo-metodologia.html',
+      cta: 'Ver el ejemplo →' }
+  ],
   secciones: [
     { t: '1. Diagrama de colaboración (comunicación)', html: `
       <p>Es un <b>diagrama de interacción</b> que muestra qué objetos colaboran en un escenario y qué mensajes se envían. Cada mensaje lleva un <b>número de secuencia</b> que indica el orden.</p>

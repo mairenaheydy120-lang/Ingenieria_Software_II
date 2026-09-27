@@ -61,6 +61,15 @@
       el.append(h('div', { class: 'card' }, h('h3', { style: 'margin-top:0' }, 'Ideas clave para recordar'),
         h('ul', { class: 'key' }, S.ideas.map(i => h('li', { html: i })))));
     }
+    if (S.recursos && S.recursos.length) {
+      el.append(h('h3', {}, 'Ejemplos y recursos del encuentro'));
+      el.append(h('div', { class: 'grid' }, S.recursos.map(r =>
+        h('div', { class: 'card' },
+          h('h3', { style: 'margin-top:0' }, r.t),
+          h('div', { class: 'muted', html: r.d }),
+          h('p', { style: 'margin:14px 0 0' },
+            h('a', { class: 'btn', href: r.href, target: '_blank', rel: 'noopener' }, r.cta || 'Abrir ejemplo →'))))));
+    }
   }
   function renderExplicaciones(S) {
     const el = $('#explicaciones');

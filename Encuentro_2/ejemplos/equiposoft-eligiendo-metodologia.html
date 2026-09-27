@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EquipoSoft: Eligiendo Metodología</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Inter:wght@400;500;600;700&display=swap">
+  <style>
+    :root {
+      --color-bg: #fafaf8;
+      --color-text: #1a1815;
+      --color-text-light: #5a5550;
+      --color-border: #e8e3de;
+      --color-accent-scrum: #0066cc;
+      --color-accent-kanban: #00a86b;
+      --color-accent-xp: #ff6b35;
+      --color-accent-rup: #8e44ad;
+      --color-accent-omt: #d4a574;
+      --color-success: #2ecc71;
+      --color-warning: #f39c12;
+      --color-card: #ffffff;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 6px rgba(0,0,0,0.07);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --color-bg: #15140f;
+        --color-text: #f5f3f0;
+        --color-text-light: #a89f97;
+        --color-border: #2d2825;
+        --color-card: #1f1d18;
+      }
+    }
+
+    :root[data-theme="dark"] {
+      --color-bg: #15140f;
+      --color-text: #f5f3f0;
+      --color-text-light: #a89f97;
+      --color-border: #2d2825;
+      --color-card: #1f1d18;
+      color-scheme: dark;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--color-bg);
+      color: var(--color-text);
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+    }
+
+    header {
+      margin-bottom: 3rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    h1 {
+      font-family: 'Merriweather', serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: var(--color-text);
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: var(--color-text-light);
+      font-weight: 400;
+    }
+
+    .section {
+      margin-bottom: 3rem;
+    }
+
+    .section h2 {
+      font-family: 'Merriweather', serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      color: var(--color-text);
+    }
+
+    .section h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: var(--color-text);
+    }
+
+    .situation-box {
+      background: var(--color-card);
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .situation-box h3 {
+      margin-top: 0;
+      margin-bottom: 1rem;
+    }
+
+    .criteria-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .criterion-card {
+      background: var(--color-card);
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .criterion-card strong {
+      display: block;
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+      color: var(--color-text);
+    }
+
+    .criterion-value {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--color-accent-scrum);
+      margin-bottom: 0.5rem;
+    }
+
+    .methodology-comparison {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .methodology-card {
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+      background: var(--color-card);
+      border: 2px solid;
+      transition: transform 0.3s ease;
+    }
+
+    .methodology-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .methodology-card.scrum {
+      border-color: var(--color-accent-scrum);
+    }
+
+    .methodology-card.kanban {
+      border-color: var(--color-accent-kanban);
+    }
+
+    .methodology-card.xp {
+      border-color: var(--color-accent-xp);
+    }
+
+    .methodology-card.rup {
+      border-color: var(--color-accent-rup);
+    }
+
+    .methodology-card.omt {
+      border-color: var(--color-accent-omt);
+    }
+
+    .methodology-header {
+      padding: 1rem;
+      color: white;
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+
+    .methodology-card.scrum .methodology-header {
+      background: var(--color-accent-scrum);
+    }
+
+    .methodology-card.kanban .methodology-header {
+      background: var(--color-accent-kanban);
+    }
+
+    .methodology-card.xp .methodology-header {
+      background: var(--color-accent-xp);
+    }
+
+    .methodology-card.rup .methodology-header {
+      background: var(--color-accent-rup);
+    }
+
+    .methodology-card.omt .methodology-header {
+      background: var(--color-accent-omt);
+    }
+
+    .methodology-content {
+      padding: 1.5rem;
+    }
+
+    .methodology-content ul {
+      list-style: none;
+      margin-bottom: 1rem;
+    }
+
+    .methodology-content li {
+      padding: 0.5rem 0;
+      padding-left: 1.5rem;
+      position: relative;
+    }
+
+    .methodology-content li:before {
+      content: "→";
+      position: absolute;
+      left: 0;
+      color: var(--color-text-light);
+    }
+
+    .fit-indicator {
+      display: inline-block;
+      padding: 0.3rem 0.8rem;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-top: 1rem;
+    }
+
+    .fit-indicator.good {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) .fit-indicator.good {
+        background: rgba(46, 204, 113, 0.2);
+        color: #2ecc71;
+      }
+    }
+
+    :root[data-theme="dark"] .fit-indicator.good {
+      background: rgba(46, 204, 113, 0.2);
+      color: #2ecc71;
+    }
+
+    .fit-indicator.excellent {
+      background: #d4edda;
+      color: #155724;
+      font-weight: 700;
+      border: 2px solid #155724;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) .fit-indicator.excellent {
+        background: rgba(46, 204, 113, 0.2);
+        color: #2ecc71;
+        border: 2px solid #2ecc71;
+      }
+    }
+
+    :root[data-theme="dark"] .fit-indicator.excellent {
+      background: rgba(46, 204, 113, 0.2);
+      color: #2ecc71;
+      border: 2px solid #2ecc71;
+    }
+
+    .decision-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      background: var(--color-card);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .decision-table th {
+      background: var(--color-text);
+      color: var(--color-bg);
+      padding: 1rem;
+      text-align: left;
+      font-weight: 600;
+    }
+
+    .decision-table td {
+      padding: 1rem;
+      border-top: 1px solid var(--color-border);
+    }
+
+    .decision-table tr:hover {
+      background: var(--color-bg);
+    }
+
+    .decision-table strong {
+      color: var(--color-accent-scrum);
+    }
+
+    figure {
+      margin: 2rem 0;
+      background: var(--color-card);
+      padding: 1.5rem;
+      border-radius: 8px;
+      border: 1px solid var(--color-border);
+    }
+
+    figcaption {
+      font-size: 0.95rem;
+      color: var(--color-text-light);
+      margin-top: 1rem;
+      font-style: italic;
+    }
+
+    svg {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .highlight-box {
+      background: rgba(0, 102, 204, 0.05);
+      border-left: 4px solid var(--color-accent-scrum);
+      padding: 1rem;
+      margin: 1.5rem 0;
+      border-radius: 4px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) .highlight-box {
+        background: rgba(0, 102, 204, 0.1);
+      }
+    }
+
+    :root[data-theme="dark"] .highlight-box {
+      background: rgba(0, 102, 204, 0.1);
+    }
+
+    .lesson-box {
+      background: var(--color-card);
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+    }
+
+    .lesson-box h4 {
+      margin-bottom: 0.5rem;
+      font-size: 1.05rem;
+    }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 1.8rem;
+      }
+
+      .methodology-comparison {
+        grid-template-columns: 1fr;
+      }
+
+      .decision-table {
+        font-size: 0.9rem;
+      }
+
+      .decision-table td, .decision-table th {
+        padding: 0.75rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <p style="margin:0 0 18px"><a href="../index.html" style="color:var(--color-accent-scrum);font-weight:600;text-decoration:none">← Volver al Encuentro 2</a></p>
+    <header>
+      <h1>EquipoSoft: Eligiendo la Metodología Correcta</h1>
+      <p class="subtitle">Cómo identificar y elegir entre OMT, RUP, Scrum, Kanban y XP para tu proyecto</p>
+    </header>
+
+    <!-- Sección 1: Situación inicial -->
+    <section class="section">
+      <h2>1. La Situación de EquipoSoft en la Semana 5</h2>
+
+      <div class="situation-box">
+        <h3>El Problema</h3>
+        <p>EquipoSoft ha planificado su proyecto CaféApp (sistema de registro de cosechas para Matagalpa). La cooperativa cliente es entusiasta, pero aparecen nuevas demandas cada semana:</p>
+        <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+          <li><strong>Semana 1:</strong> "Queremos registrar cosechas en el teléfono sin internet"</li>
+          <li><strong>Semana 2:</strong> "Necesitamos reportes por finca"</li>
+          <li><strong>Semana 3:</strong> "¿Y si agregamos alertas por SMS?"</li>
+          <li><strong>Semana 4:</strong> "Queremos ver el precio del café del día"</li>
+        </ul>
+      </div>
+
+      <div class="situation-box">
+        <h3>El Debate en el Equipo</h3>
+        <p><strong>Carmen (Líder):</strong> "Debemos planificar todo al inicio, documentar cada detalle y controlar los cambios formalmente. Propongo usar RUP con fases bien definidas."</p>
+        <p style="margin-top: 0.8rem;"><strong>Javier (Desarrollador):</strong> "Eso tardará meses. La cooperativa cambia de opinión cada semana. Deberíamos trabajar en ciclos cortos de 2 semanas, mostrar avances reales y adaptarnos rápido. Propongo Scrum o Kanban."</p>
+        <p style="margin-top: 0.8rem;"><strong>Ana (Nueva integrante):</strong> "¿Y qué hay de la calidad del código? ¿No deberíamos usar prácticas de pruebas y revisiones?"</p>
+      </div>
+
+      <p style="margin-top: 1.5rem; font-size: 1.05rem;"><strong>Pregunta central:</strong> ¿Cuál es la mejor metodología para CaféApp?</p>
+    </section>
+
+    <!-- Sección 2: Criterios de decisión -->
+    <section class="section">
+      <h2>2. Cinco Criterios Clave para Elegir Metodología</h2>
+
+      <div class="criteria-grid">
+        <div class="criterion-card">
+          <strong>📋 Estabilidad de Requisitos</strong>
+          <div class="criterion-value">CAMBIANTES</div>
+          <p>¿Sabe el cliente exactamente qué quiere, o los requisitos evolucionan?</p>
+        </div>
+
+        <div class="criterion-card">
+          <strong>👥 Tamaño del Equipo</strong>
+          <div class="criterion-value">6–8 personas</div>
+          <p>¿Cuán grande es el equipo de desarrollo?</p>
+        </div>
+
+        <div class="criterion-card">
+          <strong>⏱️ Disponibilidad del Cliente</strong>
+          <div class="criterion-value">ALTA</div>
+          <p>¿Puede el cliente revisar y dar retroalimentación frecuente?</p>
+        </div>
+
+        <div class="criterion-card">
+          <strong>🎯 Contratos y Alcance</strong>
+          <div class="criterion-value">FLEXIBLE</div>
+          <p>¿Hay un contrato rígido o es una relación ágil?</p>
+        </div>
+
+        <div class="criterion-card">
+          <strong>⚠️ Criticidad del Sistema</strong>
+          <div class="criterion-value">MEDIA</div>
+          <p>¿El sistema es crítico (debe ser muy documentado) o tolera iteraciones?</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sección 3: Análisis de cada metodología -->
+    <section class="section">
+      <h2>3. Cómo Cada Metodología Manejaría CaféApp</h2>
+
+      <div class="methodology-comparison">
+        <div class="methodology-card omt">
+          <div class="methodology-header">OMT (Object Modeling Technique)</div>
+          <div class="methodology-content">
+            <h4>¿Cómo trabajaría?</h4>
+            <ul>
+              <li>Fase de análisis profundo de todos los objetos (Cosecha, Productor, Finca)</li>
+              <li>Crear tres modelos completos antes de codificar</li>
+              <li>Documentación formal de toda la estructura</li>
+            </ul>
+
+            <h4 style="margin-top: 1rem;">Resultado esperado</h4>
+            <p>Un proyecto muy bien documentado, con modelos de datos claros.</p>
+
+            <h4 style="margin-top: 1rem;">El problema</h4>
+            <ul>
+              <li>La cooperativa espera 2–3 meses sin ver código funcionando</li>
+              <li>Los nuevos requisitos (alertas SMS) requieren replantear los modelos</li>
+              <li>No hay proceso definido para manejar cambios</li>
+            </ul>
+
+            <span class="fit-indicator">No recomendado</span>
+          </div>
+        </div>
+
+        <div class="methodology-card rup">
+          <div class="methodology-header">RUP (Rational Unified Process)</div>
+          <div class="methodology-content">
+            <h4>¿Cómo trabajaría?</h4>
+            <ul>
+              <li>4 fases: Inicio, Elaboración, Construcción, Transición</li>
+              <li>Cada fase culmina en un hito con documentación formal</li>
+              <li>Iteraciones dentro de cada fase, pero con mucha estructura</li>
+            </ul>
+
+            <h4 style="margin-top: 1rem;">Resultado esperado</h4>
+            <p>Arquitectura estable, riesgos técnicos mitigados temprano, versión beta ejecutable.</p>
+
+            <h4 style="margin-top: 1rem;">El problema</h4>
+            <ul>
+              <li>RUP es complejo y requiere disciplina (demasiado para 6–8 personas)</li>
+              <li>Es pesado para un equipo pequeño de estudiantes</li>
+              <li>No es lo óptimo si los requisitos cambian semana a semana</li>
+            </ul>
+
+            <span class="fit-indicator">Parcialmente recomendado</span>
+          </div>
+        </div>
+
+        <div class="methodology-card scrum">
+          <div class="methodology-header">Scrum (RECOMENDADO)</div>
+          <div class="methodology-content">
+            <h4>¿Cómo trabajaría?</h4>
+            <ul>
+              <li>Sprints de 2 semanas centrados en historias de usuario</li>
+              <li>Sprint Planning: qué se hará y cómo</li>
+              <li>Daily Scrum: 15 minutos de coordinación diaria</li>
+              <li>Sprint Review: mostrar a la cooperativa avance real</li>
+              <li>Sprint Retrospective: mejorar el proceso</li>
+            </ul>
+
+            <h4 style="margin-top: 1rem;">Resultado esperado</h4>
+            <p>Incremento ejecutable cada 2 semanas. La cooperativa ve avance, da retroalimentación, y el equipo se adapta.</p>
+
+            <h4 style="margin-top: 1rem;">¿Por qué encaja?</h4>
+            <ul>
+              <li>Requisitos cambiantes → Sprints permiten re-priorizar</li>
+              <li>Equipo pequeño → Reuniones simples y rápidas</li>
+              <li>Cliente disponible → Sprint Review cada 2 semanas</li>
+              <li>Entregas frecuentes → La cooperativa ve valor en 2 semanas, no en 6 meses</li>
+            </ul>
+
+            <span class="fit-indicator excellent">✓ EXCELENTE AJUSTE</span>
+          </div>
+        </div>
+
+        <div class="methodology-card kanban">
+          <div class="methodology-header">Kanban</div>
+          <div class="methodology-content">
+            <h4>¿Cómo trabajaría?</h4>
+            <ul>
+              <li>Tablero visual: Por hacer → En progreso → En revisión → Terminado</li>
+              <li>Limitar el trabajo en curso (WIP): máx. 2 tareas por columna</li>
+              <li>Flujo continuo sin iteraciones fijas</li>
+              <li>Métricas: lead time y cycle time</li>
+            </ul>
+
+            <h4 style="margin-top: 1rem;">Resultado esperado</h4>
+            <p>Flujo continuo de tareas terminadas, visualización clara del trabajo.</p>
+
+            <h4 style="margin-top: 1rem;">El problema</h4>
+            <ul>
+              <li>Kanban es mejor para mantenimiento y soporte continuo</li>
+              <li>Sin sprint reviews regulares, la cooperativa puede perder visibilidad</li>
+              <li>Funciona mejor complementado con Scrum, no como único marco</li>
+            </ul>
+
+            <span class="fit-indicator">Bueno (como complemento)</span>
+          </div>
+        </div>
+
+        <div class="methodology-card xp">
+          <div class="methodology-header">XP (Extreme Programming)</div>
+          <div class="methodology-content">
+            <h4>¿Cómo trabajaría?</h4>
+            <ul>
+              <li>Énfasis en prácticas técnicas: TDD, integración continua, parejas</li>
+              <li>Juego de planificación: cliente escriba historias, equipo estime</li>
+              <li>Refactorización continua, diseño simple</li>
+            </ul>
+
+            <h4 style="margin-top: 1rem;">Resultado esperado</h4>
+            <p>Código de alta calidad, menos defectos, adaptabilidad técnica a cambios.</p>
+
+            <h4 style="margin-top: 1rem;">El valor</h4>
+            <ul>
+              <li>Protege la calidad en un entorno de cambios</li>
+              <li>Las pruebas automatizadas evitan que nuevos requisitos rompan lo anterior</li>
+              <li>Se complementa perfectamente con Scrum</li>
+            </ul>
+
+            <span class="fit-indicator good">Excelente + Scrum</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sección 4: La comparación visual -->
+    <section class="section">
+      <h2>4. Comparación Visual: Ciclos y Entregas</h2>
+
+      <figure>
+        <svg viewBox="0 0 1000 500" role="img" aria-label="Comparación de ciclos de desarrollo: OMT/RUP vs Scrum">
+          <!-- Fondo de la comparación -->
+          <rect x="50" y="20" width="900" height="200" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="5,5" opacity="0.3"/>
+          <text x="50" y="50" font-size="14" font-weight="bold" fill="currentColor">OMT / RUP: Fases Largas (2-3 meses)</text>
+
+          <!-- Timeline OMT/RUP -->
+          <rect x="80" y="70" width="150" height="40" fill="#d4a574" stroke="#d4a574" rx="4"/>
+          <text x="155" y="100" font-size="12" fill="white" text-anchor="middle" font-weight="600">Inicio</text>
+          <text x="155" y="115" font-size="10" fill="white" text-anchor="middle">(2-3 sem)</text>
+
+          <line x1="230" y1="90" x2="280" y2="90" stroke="currentColor" stroke-width="2"/>
+          <polygon points="280,90 270,85 270,95" fill="currentColor"/>
+
+          <rect x="290" y="70" width="150" height="40" fill="#d4a574" stroke="#d4a574" rx="4"/>
+          <text x="365" y="100" font-size="12" fill="white" text-anchor="middle" font-weight="600">Elaboración</text>
+          <text x="365" y="115" font-size="10" fill="white" text-anchor="middle">(3-4 sem)</text>
+
+          <line x1="440" y1="90" x2="490" y2="90" stroke="currentColor" stroke-width="2"/>
+          <polygon points="490,90 480,85 480,95" fill="currentColor"/>
+
+          <rect x="500" y="70" width="150" height="40" fill="#d4a574" stroke="#d4a574" rx="4"/>
+          <text x="575" y="100" font-size="12" fill="white" text-anchor="middle" font-weight="600">Construcción</text>
+          <text x="575" y="115" font-size="10" fill="white" text-anchor="middle">(4-6 sem)</text>
+
+          <line x1="650" y1="90" x2="700" y2="90" stroke="currentColor" stroke-width="2"/>
+          <polygon points="700,90 690,85 690,95" fill="currentColor"/>
+
+          <rect x="710" y="70" width="150" height="40" fill="#d4a574" stroke="#d4a574" rx="4"/>
+          <text x="785" y="100" font-size="12" fill="white" text-anchor="middle" font-weight="600">Transición</text>
+          <text x="785" y="115" font-size="10" fill="white" text-anchor="middle">(2-3 sem)</text>
+
+          <!-- Primera entrega -->
+          <circle cx="785" cy="160" r="6" fill="#d4a574" stroke="currentColor" stroke-width="2"/>
+          <text x="785" y="185" font-size="11" text-anchor="middle" fill="currentColor" font-weight="600">Primera entrega</text>
+          <text x="785" y="200" font-size="10" text-anchor="middle" fill="var(--color-text-light)">(mes 3-4)</text>
+
+          <!-- Sección Scrum -->
+          <text x="50" y="290" font-size="14" font-weight="bold" fill="currentColor">Scrum: Sprints Cortos (2 semanas c/u)</text>
+
+          <!-- Sprint 1 -->
+          <rect x="80" y="310" width="80" height="40" fill="#0066cc" stroke="#0066cc" rx="4"/>
+          <text x="120" y="340" font-size="11" fill="white" text-anchor="middle" font-weight="600">Sprint 1</text>
+
+          <circle cx="120" cy="380" r="5" fill="#0066cc" stroke="currentColor" stroke-width="2"/>
+          <text x="120" y="405" font-size="10" text-anchor="middle" fill="currentColor">Incr. 1</text>
+
+          <line x1="160" y1="330" x2="195" y2="330" stroke="currentColor" stroke-width="2" stroke-dasharray="3,3"/>
+
+          <!-- Sprint 2 -->
+          <rect x="200" y="310" width="80" height="40" fill="#0066cc" stroke="#0066cc" rx="4"/>
+          <text x="240" y="340" font-size="11" fill="white" text-anchor="middle" font-weight="600">Sprint 2</text>
+
+          <circle cx="240" cy="380" r="5" fill="#0066cc" stroke="currentColor" stroke-width="2"/>
+          <text x="240" y="405" font-size="10" text-anchor="middle" fill="currentColor">Incr. 2</text>
+
+          <line x1="280" y1="330" x2="315" y2="330" stroke="currentColor" stroke-width="2" stroke-dasharray="3,3"/>
+
+          <!-- Sprint 3 -->
+          <rect x="320" y="310" width="80" height="40" fill="#0066cc" stroke="#0066cc" rx="4"/>
+          <text x="360" y="340" font-size="11" fill="white" text-anchor="middle" font-weight="600">Sprint 3</text>
+
+          <circle cx="360" cy="380" r="5" fill="#0066cc" stroke="currentColor" stroke-width="2"/>
+          <text x="360" y="405" font-size="10" text-anchor="middle" fill="currentColor">Incr. 3</text>
+
+          <line x1="400" y1="330" x2="435" y2="330" stroke="currentColor" stroke-width="2" stroke-dasharray="3,3"/>
+
+          <!-- Sprint 4 -->
+          <rect x="440" y="310" width="80" height="40" fill="#0066cc" stroke="#0066cc" rx="4"/>
+          <text x="480" y="340" font-size="11" fill="white" text-anchor="middle" font-weight="600">Sprint 4</text>
+
+          <circle cx="480" cy="380" r="5" fill="#0066cc" stroke="currentColor" stroke-width="2"/>
+          <text x="480" y="405" font-size="10" text-anchor="middle" fill="currentColor">Incr. 4</text>
+
+          <!-- Anotación de tiempo -->
+          <text x="50" y="450" font-size="11" fill="currentColor" font-weight="600">OMT/RUP:</text>
+          <text x="50" y="465" font-size="10" fill="var(--color-text-light)">1ª entrega en 11-14 semanas. Cambios requieren replaneación.</text>
+
+          <text x="500" y="450" font-size="11" fill="currentColor" font-weight="600">Scrum:</text>
+          <text x="500" y="465" font-size="10" fill="var(--color-text-light)">1ª entrega en 2 semanas. Cambios se adaptan en el siguiente Sprint.</text>
+        </svg>
+        <figcaption>OMT/RUP entregan valor una sola vez al final; Scrum entrega valor cada 2 semanas y se adapta a cambios.</figcaption>
+      </figure>
+
+      <div class="highlight-box">
+        <strong>📌 Punto clave:</strong> Para la cooperativa, ver avance cada 2 semanas es fundamental. Si esperan 3 meses sin ver nada funcionando, aparecerán dudas y nuevos requisitos. Scrum transforma eso en una ventaja: cada Sprint Review es una oportunidad de dar retroalimentación temprana.
+      </div>
+    </section>
+
+    <!-- Sección 5: La decisión de EquipoSoft -->
+    <section class="section">
+      <h2>5. La Decisión Final de EquipoSoft</h2>
+
+      <div class="situation-box">
+        <h3>Scrum + Prácticas de XP</h3>
+        <p>EquipoSoft decide adoptar <strong>Scrum como marco principal</strong>, complementado con dos prácticas de XP:</p>
+
+        <div style="margin-top: 1rem; padding: 1rem; background: var(--color-bg); border-radius: 4px;">
+          <p><strong>✓ Scrum:</strong> Sprints de 2 semanas, Sprint Reviews con la cooperativa cada 2 semanas, Product Backlog gestionado por el Product Owner (Carmen).</p>
+          <p style="margin-top: 0.8rem;"><strong>✓ XP - Programación en parejas:</strong> Para la característica "Sincronización offline", que es crítica y compleja, dos desarrolladores trabajan juntos en un teclado.</p>
+          <p style="margin-top: 0.8rem;"><strong>✓ XP - Pruebas automatizadas:</strong> Cada historia de usuario tiene pruebas antes de considerarse "Terminada". Esto protege contra regresiones cuando agregamos nuevas características.</p>
+        </div>
+
+        <h4 style="margin-top: 1.5rem;">Primer Sprint (2 semanas)</h4>
+        <table class="decision-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Historia de Usuario</th>
+              <th>Prioridad</th>
+              <th>Estimación</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>HU-01</strong></td>
+              <td>Como productor, quiero registrar mi cosecha sin conexión</td>
+              <td>Alta</td>
+              <td>8 puntos</td>
+            </tr>
+            <tr>
+              <td><strong>HU-02</strong></td>
+              <td>Como productor, quiero que mis registros se sincronicen automáticamente al recuperar conexión</td>
+              <td>Alta</td>
+              <td>8 puntos</td>
+            </tr>
+          </tbody>
+        </table>
+        <p style="margin-top: 1rem; font-size: 0.95rem; color: var(--color-text-light);"><em>Sprint Goal: "Permitir que los productores registren y sincronicen cosechas sin depender de conexión continua"</em></p>
+      </div>
+
+      <div class="lesson-box">
+        <h4>¿Por qué esta decisión es acertada?</h4>
+        <ul style="margin-left: 1.5rem; margin-top: 0.8rem;">
+          <li><strong>Requisitos cambiantes:</strong> Scrum permite re-priorizar el Product Backlog cada Sprint. Si la cooperativa pide "alertas por SMS", se agrega como nueva historia y se prioriza en la Sprint Planning siguiente.</li>
+          <li><strong>Retroalimentación rápida:</strong> Sprint Review cada 2 semanas con la cooperativa. No hay sorpresas en el mes 6.</li>
+          <li><strong>Equipo pequeño:</strong> Las reuniones son rápidas (Daily Scrum de 15 min, Sprint Planning de 1-2 horas).</li>
+          <li><strong>Calidad técnica:</strong> Las prácticas XP aseguran que código funciona y se puede refactorizar para nuevos requisitos.</li>
+          <li><strong>Menos documentación innecesaria:</strong> Scrum enfatiza "software funcionando sobre documentación extensa".</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Sección 6: Matriz de decisión para otros proyectos -->
+    <section class="section">
+      <h2>6. Matriz de Decisión: ¿Cuál Elegir para Tu Proyecto?</h2>
+
+      <table class="decision-table" style="font-size: 0.95rem;">
+        <thead>
+          <tr>
+            <th>Escenario</th>
+            <th>Metodología Recomendada</th>
+            <th>Razones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Requisitos cambiantes, cliente disponible, equipo pequeño (3–9 personas)</strong></td>
+            <td><strong>Scrum</strong></td>
+            <td>Sprints cortos, revisiones frecuentes, adaptación rápida</td>
+          </tr>
+          <tr>
+            <td>Soporte y mantenimiento con solicitudes continuas y sin ciclos fijos</td>
+            <td><strong>Kanban</strong></td>
+            <td>Flujo continuo, WIP limitado, métricas de lead time</td>
+          </tr>
+          <tr>
+            <td>Alta exigencia de calidad técnica, código que muta frecuentemente</td>
+            <td><strong>Scrum + XP</strong></td>
+            <td>TDD y integración continua reducen defectos; parejas para código crítico</td>
+          </tr>
+          <tr>
+            <td>Proyecto grande, contrato rígido, varios equipos, documentación formal obligatoria</td>
+            <td><strong>RUP</strong></td>
+            <td>Fases con hitos, arquitectura estable temprano, roles formales</td>
+          </tr>
+          <tr>
+            <td>Sistema pequeño centrado en datos, requisitos estables, análisis profundo necesario</td>
+            <td><strong>OMT</strong></td>
+            <td>Énfasis en modelado de objetos, dinámico y funcional</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="highlight-box">
+        <strong>⚡ La clave:</strong> No existe "la mejor metodología". La correcta depende de tu contexto: tamaño del equipo, estabilidad de requisitos, disponibilidad del cliente, y criticidad del sistema. Como viste con EquipoSoft, a veces la mejor opción es combinar marcos (Scrum + XP).
+      </div>
+    </section>
+
+    <!-- Sección 7: Reflexión final -->
+    <section class="section">
+      <h2>7. Reflexión: Cómo Aplicar Esto a Tu Proyecto</h2>
+
+      <div class="lesson-box">
+        <h4>Haz estas preguntas antes de elegir:</h4>
+        <ol style="margin-left: 1.5rem; margin-top: 0.8rem;">
+          <li><strong>¿Cuán fijos están los requisitos?</strong> Si cambian, necesitas agilidad (Scrum). Si son estables, puedes planificar al inicio (OMT, RUP).</li>
+          <li><strong>¿Cuán disponible está el cliente?</strong> ¿Puede dar retroalimentación cada 2 semanas? (Scrum). ¿O solo en hitos? (RUP).</li>
+          <li><strong>¿Qué tan grande es tu equipo?</strong> Pequeño (3–8): Scrum. Grande (15+): RUP o Kanban para por-subsistema.</li>
+          <li><strong>¿Cuán crítica es la calidad?</strong> Sistema de control de vuelo → RUP + documentación. App web → Scrum + XP.</li>
+          <li><strong>¿Hay presión de entrega rápida?</strong> Sí → Scrum. No → OMT o RUP para análisis profundo.</li>
+        </ol>
+      </div>
+
+      <div class="lesson-box" style="margin-top: 1.5rem;">
+        <h4>Errores comunes a evitar:</h4>
+        <ul style="margin-left: 1.5rem; margin-top: 0.8rem;">
+          <li>🚫 Elegir Scrum solo porque "es moderno". Si tu cliente no puede estar disponible cada 2 semanas, Scrum falla.</li>
+          <li>🚫 Usar RUP completo en un equipo pequeño. Es como traer una grúa para mover una caja: overkill.</li>
+          <li>🚫 No documentar en Scrum. La agilidad no significa caos. Documenta lo que el equipo futuro necesitará.</li>
+          <li>🚫 Ignorar las prácticas técnicas. Sin pruebas, refactorización e integración continua, Scrum se convierte en "caos ágil".</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Sección 8: Conclusión -->
+    <section class="section">
+      <h2>8. Conclusión</h2>
+
+      <div class="situation-box">
+        <p><strong>EquipoSoft descubrió que no se trata de elegir "la mejor" metodología, sino la más adecuada para su proyecto, su cliente y su contexto.</strong></p>
+
+        <p style="margin-top: 1rem;">Porque CaféApp tiene:</p>
+        <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+          <li>✓ Requisitos que evolucionan semana a semana</li>
+          <li>✓ Un cliente (cooperativa) accesible y entusiasta</li>
+          <li>✓ Un equipo pequeño y ágil</li>
+          <li>✓ Presión por entregar valor rápido</li>
+        </ul>
+
+        <p style="margin-top: 1rem;"><strong>Scrum es la opción natural.</strong> Complementado con prácticas de XP (parejas y pruebas), garantiza que el código es de calidad y se puede adaptar a cambios sin romperse.</p>
+
+        <p style="margin-top: 1rem;"><strong>Pero si CaféApp fuera…</strong></p>
+        <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+          <li>• Un sistema de control médico (requisitos estables, criticidad alta) → RUP</li>
+          <li>• Un sitio web de noticias (cambios constantes, no hay "ciclos") → Kanban</li>
+          <li>• Una biblioteca digital (análisis complejo, datos complejos) → OMT + UML</li>
+        </ul>
+
+        <p style="margin-top: 1rem;"><strong>La práctica constante es la clave.</strong> Aplica estas ideas a tu proyecto real, observa qué funciona, y ajusta. Como en Scrum, la retrospectiva te ayuda a mejorar tu forma de trabajar cada iteración.</p>
+      </div>
+    </section>
+
+  </div>
+</body>
+</html>
