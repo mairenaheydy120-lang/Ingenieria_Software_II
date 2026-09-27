@@ -124,6 +124,66 @@
     };
   })();
 
+  // ---------- efectos visuales (emojis, confeti, reacciones) ----------
+  const Fx = (() => {
+    const calm = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const pick = a => a[Math.floor(Math.random() * a.length)];
+    const OK = [['🤩', '¡Excelente!'], ['😎', '¡Bien pensado!'], ['🚀', '¡Imparable!'], ['🧠', '¡Qué cerebro!'], ['🏅', '¡Así se hace!'], ['🎯', '¡En el blanco!'], ['💡', '¡Brillante!']];
+    const BAD = [['🤔', '¡Casi!'], ['😅', '¡Uy! Revise la explicación'], ['💪', '¡Usted puede!'], ['📖', 'Error = aprendizaje'], ['🔍', 'Mire de nuevo']];
+    const center = el => { const r = el.getBoundingClientRect(); return [r.left + r.width / 2, r.top + r.height / 2]; };
+    // lluvia de emojis que salen del elemento tocado
+    const burst = (el, good = true) => {
+      if (!el || calm()) return;
+      const [x, y] = center(el), set = good ? ['⭐', '✨', '🎉', '👏', '💯', '🌟'] : ['💥', '❌', '😬'];
+      for (let i = 0, n = good ? 10 : 5; i < n; i++) {
+        const a = Math.random() * Math.PI * 2, d = 50 + Math.random() * 70;
+        const p = h('span', { class: 'fx-emoji', 'aria-hidden': 'true' }, pick(set));
+        p.style.left = x + 'px'; p.style.top = y + 'px';
+        p.style.setProperty('--dx', Math.cos(a) * d + 'px'); p.style.setProperty('--dy', Math.sin(a) * d - 40 + 'px');
+        document.body.append(p); setTimeout(() => p.remove(), 900);
+      }
+    };
+    // confeti a pantalla completa
+    const confetti = (n = 90) => {
+      if (calm()) return;
+      const colors = ['#f7941d', '#2e8540', '#2E5597', '#e53935', '#fdd835', '#8e24aa', '#00acc1'];
+      for (let i = 0; i < n; i++) {
+        const c = h('span', { class: 'fx-confetti', 'aria-hidden': 'true' });
+        c.style.left = Math.random() * 100 + 'vw'; c.style.background = pick(colors);
+        c.style.animationDelay = Math.random() * 0.6 + 's'; c.style.animationDuration = 1.8 + Math.random() * 1.4 + 's';
+        c.style.setProperty('--rx', (Math.random() * 200 - 100) + 'px');
+        if (Math.random() < 0.4) c.style.borderRadius = '50%';
+        document.body.append(c); setTimeout(() => c.remove(), 4000);
+      }
+    };
+    // reacción grande con emoji y frase
+    let toastEl = null, toastTimer = null;
+    const toast = (emoji, text, good = true) => {
+      if (toastEl) toastEl.remove();
+      clearTimeout(toastTimer);
+      toastEl = h('div', { class: 'fx-toast ' + (good ? 'ok' : 'bad'), 'aria-hidden': 'true' }, h('span', { class: 'fx-big' }, emoji), h('b', {}, text));
+      document.body.append(toastEl);
+      const t = toastEl; toastTimer = setTimeout(() => { t.classList.add('out'); setTimeout(() => t.remove(), 300); }, 1100);
+    };
+    const anim = (el, cls) => { if (!el) return; el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls); setTimeout(() => el.classList.remove(cls), 600); };
+    return {
+      good(el, streak) {
+        burst(el, true); anim(el, 'fx-pop');
+        if (streak >= 3) toast('🔥', '¡Racha de ' + streak + '!', true); else toast(...pick(OK), true);
+      },
+      bad(el) { burst(el, false); anim(el, 'fx-shake'); toast(...pick(BAD), false); },
+      tap(el) { anim(el, 'fx-pop'); burst(el, true); },
+      miss(el) { anim(el, 'fx-shake'); },
+      win(text = '¡Lo logró!') { confetti(); toast('🏆', text, true); },
+      confetti, toast,
+      // medalla según porcentaje
+      medal(pct) {
+        const [e, t] = pct >= 90 ? ['🏆', '¡Campeón/a del quiz!'] : pct >= 75 ? ['🥇', '¡Muy buen trabajo!'] : pct >= 60 ? ['👍', '¡Va por buen camino!'] : ['📚', '¡A repasar y otra vez!'];
+        return h('div', { class: 'fx-medal' }, h('span', { class: 'fx-big', 'aria-hidden': 'true' }, e), h('b', {}, t));
+      }
+    };
+  })();
+
   function initSound() {
     const theme = $('#themeBtn');
     if (!theme || $('#soundBtn')) return;
@@ -222,7 +282,7 @@
     const best = store.get('best:' + S.id, null);
     el.append(h('p', { class: 'muted' }, S.quiz.length + ' preguntas con retroalimentación inmediata. ' + (best !== null ? 'Su mejor puntuación: ' + best + '%.' : '')));
     const box = h('div', { class: 'card' });
-    let qs, idx, ok, musicOn = store.get('music', true);
+    let qs, idx, ok, streak = 0, musicOn = store.get('music', true);
     // la música suena solo mientras se responde el quiz y la pestaña está visible
     const syncMusic = () => {
       Sfx.music.tempo(108 + Math.round(28 * idx / qs.length));
@@ -236,7 +296,7 @@
     document.addEventListener('isw2:panel', () => { if (el.classList.contains('active') || Sfx.music.playing) syncMusic(); });
     document.addEventListener('isw2:sound', syncMusic);
     document.addEventListener('visibilitychange', () => { if (el.classList.contains('active')) syncMusic(); });
-    const start = () => { qs = shuffle(S.quiz).map(q => ({ ...q, order: shuffle(q.o.map((t, k) => k)) })); idx = 0; ok = 0; show(); };
+    const start = () => { qs = shuffle(S.quiz).map(q => ({ ...q, order: shuffle(q.o.map((t, k) => k)) })); idx = 0; ok = 0; streak = 0; show(); };
     const show = () => {
       box.innerHTML = '';
       if (idx >= qs.length) return finish();
@@ -250,7 +310,7 @@
           const buttons = [...opts.children];
           buttons.forEach(b => b.disabled = true);
           const right = k === q.a;
-          if (right) ok++;
+          if (right) { ok++; streak++; Fx.good(e.currentTarget, streak); } else { streak = 0; Fx.bad(e.currentTarget); }
           syncMusic(); Sfx.music.duck();
           right ? Sfx.correct() : Sfx.wrong();
           e.currentTarget.classList.add(right ? 'correct' : 'wrong');
@@ -260,7 +320,7 @@
           next.disabled = false; next.focus();
         }
       }, q.o[k])));
-      box.append(h('div', { class: 'row muted' }, 'Pregunta ' + (idx + 1) + ' de ' + qs.length + ' · Aciertos: ' + ok), bar,
+      box.append(h('div', { class: 'row muted' }, 'Pregunta ' + (idx + 1) + ' de ' + qs.length + ' · Aciertos: ' + ok, streak >= 2 ? h('span', { class: 'badge fx-pop' }, '🔥 Racha: ' + streak) : ''), bar,
         h('div', { class: 'q' }, h('b', { html: q.q })), opts, fb, h('div', { class: 'row', style: 'margin-top:10px' }, next));
     };
     const finish = () => {
@@ -270,7 +330,8 @@
       Sfx.music.stop();
       pct >= 75 ? Sfx.win() : pct >= 60 ? Sfx.good() : Sfx.lose();
       const nivel = pct >= 90 ? '5 – Sobresaliente' : pct >= 75 ? '4 – Notable' : pct >= 60 ? '3 – Parcialmente superado' : '2 – No alcanzado: repase y vuelva a intentarlo';
-      box.append(h('div', { style: 'text-align:center' }, h('div', { class: 'score' }, pct + '%'),
+      if (pct >= 75) Fx.confetti();
+      box.append(h('div', { style: 'text-align:center' }, Fx.medal(pct), h('div', { class: 'score' }, pct + '%'),
         h('p', {}, ok + ' de ' + qs.length + ' respuestas correctas'), h('p', {}, h('span', { class: 'badge' }, 'Nivel ' + nivel)),
         h('p', { class: 'muted' }, 'Tome una captura de pantalla de este resultado para su entrega (asignación del cuestionario).'),
         h('button', { class: 'btn', onclick: () => { Sfx.shuffle(); start(); syncMusic(); } }, '↻ Intentar de nuevo')));
@@ -289,10 +350,10 @@
         const b = e.currentTarget;
         if (b.classList.contains('ok')) return;
         if (!sel || sel.side === side) { if (sel) sel.b.classList.remove('sel'); sel = { b, side, key }; b.classList.add('sel'); Sfx.select(); return; }
-        if (sel.key === key) { sel.b.classList.remove('sel'); sel.b.classList.add('ok'); b.classList.add('ok'); done++; if (done < pairs.length) Sfx.correct(); }
-        else { errors++; Sfx.wrong(); [sel.b, b].forEach(x => { x.classList.remove('sel'); x.classList.add('bad'); setTimeout(() => x.classList.remove('bad'), 400); }); }
+        if (sel.key === key) { sel.b.classList.remove('sel'); sel.b.classList.add('ok'); b.classList.add('ok'); done++; if (done < pairs.length) { Sfx.correct(); Fx.tap(b); } }
+        else { errors++; Sfx.wrong(); Fx.miss(b); [sel.b, b].forEach(x => { x.classList.remove('sel'); x.classList.add('bad'); setTimeout(() => x.classList.remove('bad'), 400); }); }
         sel = null; upd();
-        if (done === pairs.length) Sfx.win();
+        if (done === pairs.length) { Sfx.win(); Fx.win('¡Todas las parejas!'); }
         if (done === pairs.length) status.innerHTML = '🎉 ¡Completado con ' + errors + ' error(es)! <button class="btn ghost" id="again">Jugar otra vez</button>';
         const a = $('#again', cont); if (a) a.onclick = () => { cont.innerHTML = ''; gameMatch(cont, g); };
       }
@@ -315,12 +376,12 @@
     g.cats.forEach(cat => {
       const list = h('div', { class: 'chips' });
       buckets.append(h('div', {
-        class: 'bucket', role: 'button', tabindex: '0', onclick: () => {
+        class: 'bucket', role: 'button', tabindex: '0', onclick: e => {
           if (!sel) return;
-          if (sel.c === cat) { list.append(h('span', { class: 'chip ok' }, sel.t)); sel.b.classList.add('gone'); ok++; if (ok < items.length) Sfx.correct(); }
-          else { bad++; Sfx.wrong(); const b = sel.b; b.classList.add('bad'); setTimeout(() => b.classList.remove('bad'), 400); b.classList.remove('sel'); }
+          if (sel.c === cat) { list.append(h('span', { class: 'chip ok' }, sel.t)); sel.b.classList.add('gone'); ok++; if (ok < items.length) { Sfx.correct(); Fx.tap(list.lastChild); } }
+          else { bad++; Sfx.wrong(); Fx.miss(e.currentTarget); const b = sel.b; b.classList.add('bad'); setTimeout(() => b.classList.remove('bad'), 400); b.classList.remove('sel'); }
           sel = null; upd();
-          if (ok === items.length) Sfx.win();
+          if (ok === items.length) { Sfx.win(); Fx.win('¡Todo clasificado!'); }
           if (ok === items.length) status.innerHTML = '🎉 ¡Excelente! Todo clasificado con ' + bad + ' error(es).';
         }
       }, h('h4', {}, cat), list));
@@ -344,7 +405,7 @@
     const check = () => {
       let c = 0;
       [...list.children].forEach((li, i) => { const good = arr[i].k === i; if (good) c++; li.className = good ? 'ok' : 'bad'; });
-      c === arr.length ? Sfx.win() : Sfx.wrong();
+      if (c === arr.length) { Sfx.win(); Fx.win('¡Orden perfecto!'); } else { Sfx.wrong(); Fx.miss(list); Fx.toast('🧩', c + ' de ' + arr.length + ' en su lugar', false); }
       msg.className = 'feedback ' + (c === arr.length ? 'ok' : 'bad');
       msg.innerHTML = c === arr.length ? '🎉 ¡Orden correcto! ' + (g.exp || '') : c + ' de ' + arr.length + ' en su lugar. Ajuste los elementos en rojo y vuelva a comprobar.';
     };
@@ -361,7 +422,8 @@
       box.innerHTML = '';
       if (i >= items.length) {
         const r = ok / items.length; r >= 0.75 ? Sfx.win() : r >= 0.6 ? Sfx.good() : Sfx.lose();
-        box.append(h('div', { style: 'text-align:center' }, h('div', { class: 'score' }, ok + ' / ' + items.length),
+        if (r >= 0.75) Fx.confetti();
+        box.append(h('div', { style: 'text-align:center' }, Fx.medal(Math.round(r * 100)), h('div', { class: 'score' }, ok + ' / ' + items.length),
           h('p', {}, 'escenarios resueltos correctamente'), h('button', { class: 'btn', onclick: () => { items = shuffle(g.items); i = 0; ok = 0; streak = 0; Sfx.shuffle(); draw(); } }, '↻ Jugar otra vez')));
         return;
       }
@@ -370,7 +432,7 @@
       const opts = h('div', { class: 'opts' }, g.opciones.map(o => h('button', {
         class: 'opt', onclick: e => {
           [...opts.children].forEach(b => { b.disabled = true; if (b.textContent === ans) b.classList.add('correct'); });
-          const right = o === ans; if (right) { ok++; streak++; streak >= 2 ? Sfx.streak(streak) : Sfx.correct(); } else { streak = 0; Sfx.wrong(); e.currentTarget.classList.add('wrong'); }
+          const right = o === ans; if (right) { ok++; streak++; streak >= 2 ? Sfx.streak(streak) : Sfx.correct(); Fx.good(e.currentTarget, streak); } else { streak = 0; Sfx.wrong(); Fx.bad(e.currentTarget); e.currentTarget.classList.add('wrong'); }
           fb.className = 'feedback ' + (right ? 'ok' : 'bad'); fb.innerHTML = (right ? '✔ ' : '✘ Era <b>' + ans + '</b>. ') + exp;
           box.append(h('div', { class: 'row', style: 'margin-top:10px' }, h('button', { class: 'btn', onclick: () => { i++; Sfx.click(); draw(); } }, 'Siguiente ▶')));
         }
@@ -388,14 +450,15 @@
       cont.innerHTML = '';
       const [word, hint] = bank[wi % bank.length];
       const W = norm(word); const guessed = new Set(); let lives = 6;
-      const disp = h('div', { class: 'hang' }); const lv = h('div', { class: 'lives' }); const msg = h('div');
+      const disp = h('div', { class: 'hang' }); const lv = h('span'); const face = h('span', { class: 'fx-face', 'aria-hidden': 'true' }); const msg = h('div');
       const keys = h('div', { class: 'keys' });
       const render = () => {
+        const won = [...W].every(c => !/[A-Z]/.test(c) || guessed.has(c));
         disp.textContent = [...W].map(c => /[A-Z]/.test(c) ? (guessed.has(c) ? c : '_') : c).join('');
         lv.textContent = '❤'.repeat(lives) + '♡'.repeat(6 - lives);
-        const won = [...W].every(c => !/[A-Z]/.test(c) || guessed.has(c));
+        face.textContent = won ? '🥳' : ['💀', '😱', '😨', '😟', '😐', '🙂', '😀'][lives];
         if (won || lives === 0) {
-          if (!keys.dataset.done) { keys.dataset.done = '1'; won ? Sfx.win() : Sfx.lose(); }
+          if (!keys.dataset.done) { keys.dataset.done = '1'; if (won) { Sfx.win(); Fx.win('¡Palabra descubierta!'); } else { Sfx.lose(); Fx.toast('💀', '¡Se acabaron las vidas!', false); } }
           [...keys.children].forEach(b => b.disabled = true);
           msg.className = 'feedback ' + (won ? 'ok' : 'bad');
           msg.innerHTML = (won ? '🎉 ¡Bien! ' : '✘ La palabra era <b>' + word + '</b>. ') + (g.exp && g.exp[word] ? g.exp[word] : '');
@@ -403,9 +466,9 @@
         }
       };
       'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(L => keys.append(h('button', {
-        onclick: e => { e.currentTarget.disabled = true; guessed.add(L); if (!W.includes(L)) { lives--; Sfx.thud(); } else Sfx.pop(); render(); }
+        onclick: e => { e.currentTarget.disabled = true; guessed.add(L); if (!W.includes(L)) { lives--; Sfx.thud(); Fx.miss(face); } else { Sfx.pop(); Fx.tap(disp); } render(); }
       }, L)));
-      cont.append(h('p', {}, g.inst || 'Adivine el término letra por letra. Tiene 6 vidas.'), h('div', { class: 'note tip' }, h('b', {}, 'Pista: '), hint), disp, lv, keys, msg);
+      cont.append(h('p', {}, g.inst || 'Adivine el término letra por letra. Tiene 6 vidas.'), h('div', { class: 'note tip' }, h('b', {}, 'Pista: '), hint), disp, h('div', { class: 'lives' }, face, lv), keys, msg);
       render();
     };
     play();
@@ -428,7 +491,7 @@
           h('button', { class: 'btn', onclick: () => {
             const v = parseFloat(String(inp.value).replace(',', '.'));
             const right = Math.abs(v - te) < 0.01;
-            right ? Sfx.win() : Sfx.wrong();
+            if (right) { Sfx.win(); Fx.win('¡Cálculo exacto!'); } else { Sfx.wrong(); Fx.bad(inp); }
             fb.className = 'feedback ' + (right ? 'ok' : 'bad');
             fb.innerHTML = (right ? '✔ ¡Correcto! ' : '✘ No es correcto. ') + 'Te = (' + O + ' + 4×' + M + ' + ' + P + ') / 6 = (' + O + ' + ' + 4 * M + ' + ' + P + ') / 6 = <b>' + te + ' días</b>.';
           } }, 'Comprobar'),

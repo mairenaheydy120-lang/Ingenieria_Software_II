@@ -135,9 +135,31 @@ footer{border-top:1px solid var(--border);padding:22px 0;color:var(--muted);font
 .gamecard{cursor:pointer;text-align:left;border:1px solid var(--border);background:var(--surface);color:var(--text);border-radius:var(--radius);padding:14px;font:inherit;box-shadow:var(--shadow)}
 .gamecard b{color:var(--brand);display:block;margin-bottom:4px}
 .gamecard[aria-pressed="true"]{outline:3px solid var(--accent)}
+
+/* Efectos lúdicos */
+.fx-emoji{position:fixed;z-index:60;pointer-events:none;font-size:22px;transform:translate(-50%,-50%);animation:fxfly .85s ease-out forwards}
+@keyframes fxfly{0%{opacity:1;transform:translate(-50%,-50%) scale(.4)}70%{opacity:1}100%{opacity:0;transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(1.2) rotate(25deg)}}
+.fx-confetti{position:fixed;top:-12px;z-index:60;width:9px;height:14px;pointer-events:none;border-radius:2px;animation:fxfall 2.4s cubic-bezier(.25,.6,.5,1) forwards}
+@keyframes fxfall{0%{transform:translate(0,0) rotate(0)}100%{transform:translate(var(--rx),105vh) rotate(720deg);opacity:.8}}
+.fx-toast{position:fixed;left:50%;top:132px;z-index:61;pointer-events:none;display:flex;align-items:center;gap:10px;max-width:calc(100vw - 32px);padding:10px 18px 10px 12px;border-radius:999px;background:var(--surface);border:2px solid var(--ok);color:var(--ok);box-shadow:0 8px 24px rgba(0,0,0,.18);font-size:1.05rem;transform:translateX(-50%);animation:fxtoast .4s cubic-bezier(.2,1.6,.4,1)}
+.fx-toast.bad{border-color:var(--bad);color:var(--bad)}
+.fx-toast.out{opacity:0;transform:translate(-50%,-10px);transition:all .3s}
+.fx-toast .fx-big{font-size:2rem;line-height:1;animation:fxwiggle .6s ease-in-out}
+@keyframes fxtoast{0%{opacity:0;transform:translate(-50%,-14px) scale(.6)}100%{opacity:1;transform:translate(-50%,0) scale(1)}}
+@keyframes fxwiggle{0%,100%{transform:rotate(0)}25%{transform:rotate(-15deg) scale(1.2)}75%{transform:rotate(15deg) scale(1.2)}}
+.fx-pop{animation:fxpop .45s ease-out}
+@keyframes fxpop{0%{transform:scale(1)}40%{transform:scale(1.06)}100%{transform:scale(1)}}
+.fx-shake{animation:fxshake .45s}
+@keyframes fxshake{15%,55%{transform:translateX(-6px)}35%,75%{transform:translateX(6px)}}
+.fx-medal{display:flex;flex-direction:column;align-items:center;gap:4px;margin-bottom:4px;color:var(--brand)}
+.fx-medal .fx-big{font-size:4rem;line-height:1.1;animation:fxbounce 1s cubic-bezier(.3,1.8,.5,1)}
+@keyframes fxbounce{0%{transform:scale(0) rotate(-30deg)}100%{transform:scale(1) rotate(0)}}
+.fx-face{display:inline-block;font-size:1.9rem;margin-right:8px;vertical-align:middle}
+@media (prefers-reduced-motion: reduce){.fx-toast,.fx-toast .fx-big,.fx-pop,.fx-shake,.fx-medal .fx-big{animation:none}}
 @media (max-width:560px){
   .match{grid-template-columns:1fr}
   .flash{height:260px}
   .hero{padding:26px 0 30px}
+  .fx-toast{top:118px;font-size:.95rem}
 }
 @media print{.top,.tabs,footer{display:none}.panel{display:block!important}}
